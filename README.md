@@ -69,9 +69,9 @@ npm run dev
 ```
 
 ```
-docker build -t flexim .
+docker build -t caffellattewebsite .
 ```
 
 ```
-docker-compose up -d flexim
+docker-compose up -d caffellattewebsite
 ```
