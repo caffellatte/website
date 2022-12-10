@@ -13,7 +13,7 @@
     "@zeit/next-css": "^1.0.1",
     "body-parser": "^1.19.0",
     "cowsay-browser": "^1.1.8",
-    "express": "^4.17.0",
+    "express": "^4.17.3",
     "isomorphic-unfetch": "^3.0.0",
     "mdbreact": "^4.14.0",
     "next": "^8.1.0",
