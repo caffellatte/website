@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Typography } from "@/components/ui/base/Text";
+import { Typography } from "@/components/ui/base/Typography";
 
 export default function Home() {
   return (
