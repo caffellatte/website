@@ -1,5 +1,8 @@
-// https://stackoverflow.com/questions/73554477/typescript-error-with-custom-typography-component
-import clsx from "clsx";
+import { Slot } from "@radix-ui/react-slot";
+import { VariantProps, cva } from "class-variance-authority";
+
+import { cn } from "@/lib/utils";
+import { forwardRef, HTMLAttributes } from "react";
 
 const variants = {
   h1: "h1",
@@ -13,9 +16,9 @@ const variants = {
   body1: "p",
   body2: "p",
   link: "p",
-} as const;
+};
 
-const typographyVariants = {
+const typographyStyleVariants = {
   h1: "text-6xl",
   h2: "text-5xl",
   h3: "text-4xl",
@@ -26,26 +29,48 @@ const typographyVariants = {
   subheading2: "text-1xl font-semibold",
   body1: "text-base",
   body2: "text-base font-bold",
-  link: "text-xs text-primaryViolet uppercase underline font-bold",
+  link: "underline underline-offset-2 hover:no-underline transition duration-200 ease-in-out",
 };
 
-export type TypographyProps = {
-  variant?: keyof typeof variants;
-  className?: string;
-  children: React.ReactNode | string;
-};
+const typographyVariants = cva("text-base font-normal", {
+  variants: {
+    variant: typographyStyleVariants,
+    color: {
+      primary: "text-primary",
+      secondary: "text-secondary-foreground",
+      main: "text-foreground",
+      accent: "text-accent",
+    },
+  },
+  defaultVariants: {
+    variant: "body1",
+    color: "main",
+  },
+});
 
-export const Typography = ({
-  variant = "body1",
-  className,
-  children,
-}: TypographyProps) => {
-  const Component = variants[variant];
-  const typographyStyles = typographyVariants[variant];
+interface TypographyProps
+  extends Omit<
+      HTMLAttributes<HTMLParagraphElement | HTMLHeadingElement>,
+      "color"
+    >,
+    VariantProps<typeof typographyVariants> {
+  asChild?: boolean;
+}
 
+const Typography = forwardRef<
+  HTMLParagraphElement | HTMLHeadingElement,
+  TypographyProps
+>(({ className, variant, color, asChild = false, ...props }, ref) => {
+  const Component = asChild ? Slot : variant ? variants[variant] : "p";
   return (
-    <Component className={clsx("font-sans", typographyStyles, className)}>
-      {children}
-    </Component>
+    <Component
+      className={cn(typographyVariants({ variant, color, className }))}
+      ref={ref}
+      {...props}
+    />
   );
-};
+});
+
+Typography.displayName = "Typography";
+
+export { Typography, type TypographyProps, typographyVariants };
