@@ -22,8 +22,7 @@ export default function MainLayout({
       {isLoading && isHome ? (
         <SplashScreen finishLoading={() => setIsLoading(false)} />
       ) : (
-        <SplashScreen finishLoading={() => setIsLoading(false)} />
-        // children
+        children
       )}
     </>
   );

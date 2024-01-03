@@ -12,50 +12,57 @@ const SplashScreen: FC<SplashScreenProps> = ({ finishLoading }) => {
   const [isMounted, setIsMounted] = useState<boolean>(false);
 
   const animate = useCallback(() => {
-    // const layer = anime.timeline({
-    //   complete: () => finishLoading(),
-    // });
-    // layer
-    //   .add({
-    //     targets: "#logo",
-    //     delay: 0,
-    //     scale: 1,
-    //     duration: 230,
-    //     easing: "easeInOutBounce",
-    //   })
-    //   .add({
-    //     targets: "#logo",
-    //     delay: 0,
-    //     scale: 1.12,
-    //     duration: 230,
-    //     easing: "easeInOutBounce",
-    //   })
-    //   .add({
-    //     targets: "#logo",
-    //     delay: 0,
-    //     scale: 1,
-    //     duration: 230,
-    //     easing: "easeInOutBounce",
-    //   })
-    //   .add({
-    //     targets: "#logo",
-    //     delay: 0,
-    //     scale: 1.12,
-    //     duration: 230,
-    //     easing: "easeInOutBounce",
-    //   });
+    const layer = anime.timeline();
+    layer
+      .add({
+        targets: "#logo",
+        delay: 0,
+        scale: 1,
+        duration: 230,
+        easing: "easeInOutBounce",
+      })
+      .add({
+        targets: "#logo",
+        delay: 0,
+        scale: 1.16,
+        duration: 230,
+        easing: "easeInOutBounce",
+      })
+      .add({
+        targets: "#logo",
+        delay: 0,
+        scale: 1,
+        duration: 230,
+        easing: "easeInOutBounce",
+      })
+      .add({
+        targets: "#logo",
+        delay: 0,
+        scale: 1.16,
+        duration: 230,
+        easing: "easeInOutBounce",
+      });
 
     const loader = anime.timeline({
       complete: () => finishLoading(),
     });
-    loader.add({
-      targets: "#loader-path",
-      strokeDashoffset: [anime.setDashoffset, 1],
-      easing: "easeInOutSine",
-      duration: 920,
-      direction: "normal",
-      // loop: true,
-    });
+    loader
+      .add({
+        targets: "#loader-path",
+        strokeDashoffset: [anime.setDashoffset, 0],
+        easing: "easeInSine",
+        duration: 800,
+        direction: "normal",
+        loop: true,
+      })
+      .add({
+        targets: "#loader-path",
+        strokeDashoffset: [0, anime.setDashoffset],
+        easing: "easeInExpo",
+        duration: 800,
+        direction: "reverse",
+        loop: true,
+      });
   }, [finishLoading]);
 
   useEffect(() => {
