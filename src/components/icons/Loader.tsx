@@ -19,7 +19,7 @@ export const Loader = React.forwardRef<SVGSVGElement, IconProps>(
         <g>
           <path
             id="loader-path"
-            d="m51.4,8.65l-43.1,0.1l0.2,42.6l43.2,-0.4l-0.3,-42.3z"
+            d="m51.4,8.65l-43.1,0.1l0.2,42.6l43.2,-0.4l-0.3,-48.3z"
             opacity="NaN"
             strokeWidth="12"
             stroke={color}
