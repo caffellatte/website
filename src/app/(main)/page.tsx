@@ -1,2 +1,2 @@
-import { default as HomePage } from "@/components/ui/views/home/Home";
+import { default as HomePage } from "@/components/views/home/Home";
 export default HomePage;
