@@ -1,10 +1,10 @@
 "use client";
 
-import anime from "animejs";
 import { cn } from "@/lib/utils";
 import { Loader } from "@/components/icons";
+import { FC, useEffect, useState, useRef } from "react";
 import { Typography } from "@/components/ui/base/Typography";
-import { FC, useEffect, useState, useCallback } from "react";
+import anime, { AnimeTimelineInstance, AnimeInstance } from "animejs";
 
 interface SplashScreenProps {
   finishLoading: () => void;
@@ -13,8 +13,11 @@ interface SplashScreenProps {
 const SplashScreen: FC<SplashScreenProps> = ({ finishLoading }) => {
   const [isMounted, setIsMounted] = useState<boolean>(false);
 
-  const animate = useCallback(() => {
-    anime({
+  const loaderAnimationRef = useRef<AnimeInstance>();
+  const loaderPathAnimationRef = useRef<AnimeTimelineInstance>();
+
+  useEffect(() => {
+    loaderAnimationRef.current = anime({
       targets: "#loader",
       rotate: {
         value: 360,
@@ -29,11 +32,11 @@ const SplashScreen: FC<SplashScreenProps> = ({ finishLoading }) => {
       },
     });
 
-    const loader = anime.timeline({
+    loaderPathAnimationRef.current = anime.timeline({
       complete: () => finishLoading(),
     });
 
-    loader
+    loaderPathAnimationRef.current
       .add({
         targets: "#loader-path",
         duration: 200,
@@ -67,13 +70,9 @@ const SplashScreen: FC<SplashScreenProps> = ({ finishLoading }) => {
         duration: 600,
         opacity: 0,
       });
-  }, [finishLoading]);
 
-  useEffect(() => {
-    const timeout = setTimeout(() => setIsMounted(true), 10);
-    animate();
-    return () => clearTimeout(timeout);
-  }, [animate]);
+    setIsMounted(true);
+  }, [finishLoading]);
 
   return (
     <div className="flex h-screen items-center justify-center">
