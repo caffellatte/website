@@ -40,6 +40,7 @@ const typographyVariants = cva("text-base font-normal", {
       secondary: "text-secondary-foreground",
       main: "text-foreground",
       accent: "text-accent",
+      white: "text-white",
     },
   },
   defaultVariants: {
