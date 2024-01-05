@@ -1,9 +1,9 @@
 "use client";
 
-import { cn } from "@/lib/utils";
-import { Loader } from "@/components/icons";
+import { cn } from "@client/lib/utils";
+import { Loader } from "@client/components/icons";
 import { FC, useEffect, useState, useRef } from "react";
-import { Typography } from "@/components/ui/base/Typography";
+import { Typography } from "@client/components/ui/base/Typography";
 import anime, { AnimeTimelineInstance, AnimeInstance } from "animejs";
 
 interface SplashScreenProps {

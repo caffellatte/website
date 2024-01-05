@@ -2,7 +2,7 @@ import Link from "next/link";
 import {
   Typography,
   typographyVariants,
-} from "@/components/ui/base/Typography";
+} from "@client/components/ui/base/Typography";
 
 const Home = () => {
   return (
