@@ -15,7 +15,7 @@ const variants = {
   subheading2: "h6",
   body1: "p",
   body2: "p",
-  link: "p",
+  link: "span",
 };
 
 const typographyStyleVariants = {
@@ -51,7 +51,9 @@ const typographyVariants = cva("text-base font-normal", {
 
 interface TypographyProps
   extends Omit<
-      HTMLAttributes<HTMLParagraphElement | HTMLHeadingElement>,
+      HTMLAttributes<
+        HTMLParagraphElement | HTMLHeadingElement | HTMLSpanElement
+      >,
       "color"
     >,
     VariantProps<typeof typographyVariants> {
