@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
-import SplashScreen from "@/components/ui/common/SplashScreen";
+import SplashScreen from "@client/components/ui/common/SplashScreen";
 
 export default function MainLayout({
   children, // will be a page or nested layout

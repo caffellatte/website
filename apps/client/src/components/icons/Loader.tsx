@@ -1,5 +1,5 @@
 import React from "react";
-import { IconProps } from "@/types/icon";
+import { IconProps } from "@client/types/icon";
 
 export const Loader = React.forwardRef<SVGSVGElement, IconProps>(
   (
