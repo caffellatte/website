@@ -3,8 +3,11 @@ import {
   Typography,
   typographyVariants,
 } from "@client/components/ui/base/Typography";
+import { trpc } from "@client/app/trpc";
 
-const Home = () => {
+const Home = async () => {
+  const { greeting } = await trpc.hello.query({ name: `Tom` });
+  console.log(greeting);
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-12">
       <div className="flex flex-col gap-3 text-center">

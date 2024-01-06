@@ -8,6 +8,8 @@ importers:
   apps/client:
     specifiers:
       '@radix-ui/react-slot': ^1.0.2
+      '@trpc/client': ^10.45.0
+      '@trpc/server': ^10.45.0
       '@types/animejs': ^3.1.12
       '@types/node': ^20.10.6
       '@types/react': ^18.2.46
@@ -29,6 +31,8 @@ importers:
       typescript: ^5.3.3
     dependencies:
       '@radix-ui/react-slot': 1.0.2_sowt5japhjbdixo6tryvx3gigm
+      '@trpc/client': 10.45.0_@trpc+server@10.45.0
+      '@trpc/server': 10.45.0
       '@types/animejs': 3.1.12
       animejs: 3.2.2
       class-variance-authority: 0.7.0
@@ -1433,6 +1437,14 @@ packages:
     resolution: {integrity: sha512-E4KcWTpoLHqwPHLxidpOqQbcrZVgi0rsmmZXUle1jXmJfuIf/UWpczUJ7MZZ5tlxytgJXyp0w4PGkkeLiuIdZw==}
     dependencies:
       tslib: 2.6.2
+    dev: false
+
+  /@trpc/client/10.45.0_@trpc+server@10.45.0:
+    resolution: {integrity: sha512-m091R1qte9rvkvL8N1e/mzrbb8S4gb+Q4ZNJnEGDgd7kic/6a8DFgSciBTiCoSp0YwOTVhyQzSrrA/sZI6PhBg==}
+    peerDependencies:
+      '@trpc/server': 10.45.0
+    dependencies:
+      '@trpc/server': 10.45.0
     dev: false
 
   /@trpc/server/10.45.0:
