@@ -5,7 +5,7 @@ import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experimental";
 import { httpBatchLink } from "@trpc/client";
-import { trpc } from "@client/lib/trpc";
+import { trpc } from "@client/services/trpc";
 import { useState } from "react";
 
 function Providers({ children }: React.PropsWithChildren) {

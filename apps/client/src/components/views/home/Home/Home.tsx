@@ -5,7 +5,7 @@ import {
   Typography,
   typographyVariants,
 } from "@client/components/ui/base/Typography";
-import { trpc } from "@client/lib/trpc";
+import { trpc } from "@client/services/trpc";
 
 // const async Home = () => {
 const Home = () => {
