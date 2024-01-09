@@ -39,17 +39,19 @@ export class TrpcRouter {
       }),
     linksFindAll: this.trpc.procedure
       .input(z.object({}).optional())
-      .query(() => {
+      .query(async () => {
+        const links = await this.links.findAll();
         return {
-          links: this.links.findAll(),
+          links: links,
         };
       }),
     linkFindById: this.trpc.procedure
       .input(z.object({ id: z.number() }))
-      .query(({ input }) => {
+      .query(async ({ input }) => {
         const { id } = input;
+        const link = await this.links.findOne(id);
         return {
-          links: this.links.findOne(id),
+          link: link,
         };
       }),
   });

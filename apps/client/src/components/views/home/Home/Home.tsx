@@ -16,7 +16,7 @@ const Home = () => {
   const linkCreateMutation = trpc.linkCreate.useMutation();
 
   console.log(findLinksAllQuery.data?.links);
-  console.log(findLinkFindById.data?.links);
+  console.log(findLinkFindById.data?.link);
   const handleLinkCreate = () => {
     linkCreateMutation.mutate({
       title: "Title",

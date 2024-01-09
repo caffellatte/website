@@ -23,11 +23,11 @@ export class LinksService {
   }
 
   async create(title: string, description: string, url: string): Promise<Link> {
-    const entity = new Link();
-    entity.title = title;
-    entity.description = description;
-    entity.url = url;
-    // this.linksRepository.create(entity);
+    const entity = this.linksRepository.create({
+      title: title,
+      description: description,
+      url: url,
+    });
     return this.linksRepository.save(entity);
   }
 }
