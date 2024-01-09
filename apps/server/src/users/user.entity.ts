@@ -1,5 +1,10 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
-import { Link } from '@server/links/link.entity';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  //  OneToMany
+} from 'typeorm';
+// import { Link } from '@server/links/link.entity';
 
 @Entity()
 export class User {
@@ -15,6 +20,6 @@ export class User {
   @Column({ default: true })
   isActive: boolean;
 
-  @OneToMany(() => Link, (link) => link.user)
-  links: Link[];
+  // @OneToMany(() => Link, (link) => link.user)
+  // links: Link[];
 }

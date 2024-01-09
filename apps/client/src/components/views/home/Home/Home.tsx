@@ -11,6 +11,19 @@ import { trpc } from "@client/services/trpc";
 const Home = () => {
   // const { greeting } = await trpc.hello.query({ name: `Tom` });
   const helloQuery = trpc.hello.useQuery({ name: `Tom` });
+  const findLinksAllQuery = trpc.linksFindAll.useQuery({});
+  const findLinkFindById = trpc.linkFindById.useQuery({ id: 5 });
+  const linkCreateMutation = trpc.linkCreate.useMutation();
+
+  console.log(findLinksAllQuery.data?.links);
+  console.log(findLinkFindById.data?.links);
+  const handleLinkCreate = () => {
+    linkCreateMutation.mutate({
+      title: "Title",
+      description: "Description",
+      url: "URL",
+    });
+  };
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-12">
       <div className="flex flex-col gap-3 text-center">
@@ -23,6 +36,12 @@ const Home = () => {
           github.com/caffellatte
         </Link>
         <Typography variant="h6">{helloQuery.data?.greeting}</Typography>
+        <button
+          onClick={handleLinkCreate}
+          disabled={linkCreateMutation.isLoading}
+        >
+          Login
+        </button>
       </div>
     </main>
   );
