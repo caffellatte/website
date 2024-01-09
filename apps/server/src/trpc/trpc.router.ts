@@ -2,10 +2,14 @@ import { INestApplication, Injectable } from '@nestjs/common';
 import { z } from 'zod';
 import { TrpcService } from '@server/trpc/trpc.service';
 import * as trpcExpress from '@trpc/server/adapters/express';
+import { LinksService } from '@server/links/links.service';
 
 @Injectable()
 export class TrpcRouter {
-  constructor(private readonly trpc: TrpcService) {}
+  constructor(
+    private readonly trpc: TrpcService,
+    private readonly links: LinksService,
+  ) {}
 
   appRouter = this.trpc.router({
     hello: this.trpc.procedure
@@ -18,6 +22,34 @@ export class TrpcRouter {
         const { name } = input;
         return {
           greeting: `Hello ${name ? name : `Bilbo`}`,
+        };
+      }),
+    linkCreate: this.trpc.procedure
+      .input(
+        z.object({
+          title: z.string(),
+          description: z.string(),
+          url: z.string(),
+        }),
+      )
+      .mutation(async ({ input }) => {
+        const { title, description, url } = input;
+        console.log('trpc.router.ts:', title, description, url);
+        return await this.links.create(title, description, url);
+      }),
+    linksFindAll: this.trpc.procedure
+      .input(z.object({}).optional())
+      .query(() => {
+        return {
+          links: this.links.findAll(),
+        };
+      }),
+    linkFindById: this.trpc.procedure
+      .input(z.object({ id: z.number() }))
+      .query(({ input }) => {
+        const { id } = input;
+        return {
+          links: this.links.findOne(id),
         };
       }),
   });

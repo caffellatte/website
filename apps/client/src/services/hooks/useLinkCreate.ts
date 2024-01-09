@@ -5,18 +5,18 @@ import {
   type RouterOutputs,
 } from "@client/services/trpc";
 
-type LinkCreateOptions = ReactQueryOptions["link"]["create"];
+type LinkCreateOptions = ReactQueryOptions["linkCreate"];
 
 export function useLinkCreate(options?: LinkCreateOptions) {
   const utils = trpc.useUtils();
 
-  return trpc.link.create.useMutation({
+  return trpc.linkCreate.useMutation({
     ...options,
-    onSuccess(link) {
+    onSuccess(title, description, url) {
       // invalidate all queries on the link router
       // when a new link is created
-      utils.link.invalidate();
-      options?.onSuccess?.(link);
+      // utils.linkCreate.invalidate();
+      options?.onSuccess?.(title, description, url);
     },
   });
 }

@@ -21,4 +21,13 @@ export class LinksService {
   async remove(id: number): Promise<void> {
     await this.linksRepository.delete(id);
   }
+
+  async create(title: string, description: string, url: string): Promise<Link> {
+    const entity = new Link();
+    entity.title = title;
+    entity.description = description;
+    entity.url = url;
+    // this.linksRepository.create(entity);
+    return this.linksRepository.save(entity);
+  }
 }
