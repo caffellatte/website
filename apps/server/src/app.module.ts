@@ -4,6 +4,7 @@ import { AppService } from '@server/app.service';
 import { TrpcModule } from '@server/trpc/trpc.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
+import { BullModule } from '@nestjs/bull';
 import { User } from '@server/users/user.entity';
 import { Link } from '@server/links/link.entity';
 
@@ -21,6 +22,13 @@ import { Link } from '@server/links/link.entity';
       synchronize: true, // shouldn't be used in production
       logging: true,
       autoLoadEntities: true,
+    }),
+    BullModule.forRoot({
+      redis: {
+        host: 'localhost',
+        password: 'password',
+        port: 6379,
+      },
     }),
   ],
   controllers: [AppController],
