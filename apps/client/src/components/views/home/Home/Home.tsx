@@ -5,20 +5,19 @@ import {
   Typography,
   typographyVariants,
 } from "@client/components/ui/base/Typography";
-import { trpc } from "@client/services/trpc";
+import { useLinkCreate } from "@client/services/hooks/useLinkCreate";
+import { useLinkFindById } from "@client/services/hooks/useLinkFindById";
+import { useLinksFindAll } from "@client/services/hooks/useLinksFindAll";
 
-// const async Home = () => {
 const Home = () => {
-  // const { greeting } = await trpc.hello.query({ name: `Tom` });
-  const helloQuery = trpc.hello.useQuery({ name: `Tom` });
-  const findLinksAllQuery = trpc.linksFindAll.useQuery({});
-  const findLinkFindById = trpc.linkFindById.useQuery({ id: 5 });
-  const linkCreateMutation = trpc.linkCreate.useMutation();
+  const linkCreate = useLinkCreate();
+  const links = useLinksFindAll();
+  const link = useLinkFindById({ id: 1 });
 
-  console.log(findLinksAllQuery.data?.links);
-  console.log(findLinkFindById.data?.link);
+  console.log(link.data?.link);
+  console.log(links.data?.links);
   const handleLinkCreate = () => {
-    linkCreateMutation.mutate({
+    linkCreate.mutate({
       title: "Title",
       description: "Description",
       url: "URL",
@@ -35,11 +34,7 @@ const Home = () => {
         >
           github.com/caffellatte
         </Link>
-        <Typography variant="h6">{helloQuery.data?.greeting}</Typography>
-        <button
-          onClick={handleLinkCreate}
-          disabled={linkCreateMutation.isLoading}
-        >
+        <button onClick={handleLinkCreate} disabled={linkCreate.isLoading}>
           Login
         </button>
       </div>
