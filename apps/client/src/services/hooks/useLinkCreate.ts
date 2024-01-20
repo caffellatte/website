@@ -16,6 +16,8 @@ export function useLinkCreate(options?: LinkCreateOptions) {
       // invalidate all queries on the link router
       // when a new link is created
       // utils.linkCreate.invalidate();
+      // utils.linksFindAll.invalidate();
+      utils.invalidate();
       options?.onSuccess?.(title, description, url);
     },
   });
