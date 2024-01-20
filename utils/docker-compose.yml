@@ -27,6 +27,19 @@ services:
       - pgadmin
     depends_on:
       - db
+  redis:
+    image: redis:latest
+    restart: always
+    ports:
+      - "6379:6379"
+    command:
+      - /bin/sh
+      - -c
+      - redis-server --requirepass "$${REDIS_PASSWORD:?REDIS_PASSWORD variable is not set}"
+    volumes:
+      - ../.data/redis:/var/lib/redis/data
+    env_file:
+      - ./.env
 
 volumes:
   pgdata:
