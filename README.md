@@ -1,7 +1,5 @@
 # Website
 
-## Description
-
 Website is a full-stack web application built with Nest.js for the backend, Next.js for the frontend, and tRPC for end-to-end typesafe APIs. It is containerized using Docker and includes a CI/CD pipeline for automated testing and deployment.
 
 ## Installation
