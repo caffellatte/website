@@ -8,19 +8,28 @@ import {
 import { useLinkCreate } from "@client/services/hooks/useLinkCreate";
 import { useLinkFindById } from "@client/services/hooks/useLinkFindById";
 import { useLinksFindAll } from "@client/services/hooks/useLinksFindAll";
+import { useLinksAnalyze } from "@client/services/hooks/useLinksAnalyze";
 
 const Home = () => {
   const linkCreate = useLinkCreate();
+  const linkAnalyze = useLinksAnalyze();
   const links = useLinksFindAll();
   const link = useLinkFindById({ id: 1 });
 
   console.log(link.data?.link);
   console.log(links.data?.links);
+
   const handleLinkCreate = () => {
     linkCreate.mutate({
       title: "Title",
       description: "Description",
       url: "URL",
+    });
+  };
+
+  const handleLinksAnalyze = () => {
+    linkAnalyze.mutate({
+      type: "test",
     });
   };
   return (
@@ -35,7 +44,10 @@ const Home = () => {
           github.com/caffellatte
         </Link>
         <button onClick={handleLinkCreate} disabled={linkCreate.isLoading}>
-          Login
+          Create link
+        </button>
+        <button onClick={handleLinksAnalyze} disabled={linkCreate.isLoading}>
+          Analyze links
         </button>
       </div>
     </main>
