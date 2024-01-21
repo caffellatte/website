@@ -24,6 +24,12 @@ export class TrpcRouter {
           greeting: `Hello ${name ? name : `Bilbo`}`,
         };
       }),
+    linksAnalyze: this.trpc.procedure
+      .input(z.object({ type: z.string() }))
+      .mutation(async ({ input }) => {
+        const { type } = input;
+        return await this.links.analyze(type);
+      }),
     linkCreate: this.trpc.procedure
       .input(
         z.object({
