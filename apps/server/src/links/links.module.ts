@@ -4,11 +4,17 @@ import { LinksService } from '@server/links/links.service';
 import { Link } from '@server/links/link.entity';
 import { LinksProcessor } from '@server/links/links.processor';
 import { BullModule } from '@nestjs/bull';
+import { BullBoardModule } from '@bull-board/nestjs';
+import { BullAdapter } from '@bull-board/api/bullAdapter';
 
 @Module({
   imports: [
     BullModule.registerQueue({
       name: 'links',
+    }),
+    BullBoardModule.forFeature({
+      name: 'links',
+      adapter: BullAdapter,
     }),
     TypeOrmModule.forFeature([Link]),
   ],

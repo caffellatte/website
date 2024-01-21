@@ -3,10 +3,12 @@ import { AppController } from '@server/app.controller';
 import { AppService } from '@server/app.service';
 import { TrpcModule } from '@server/trpc/trpc.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { DataSource } from 'typeorm';
 import { BullModule } from '@nestjs/bull';
 import { User } from '@server/users/user.entity';
 import { Link } from '@server/links/link.entity';
+import { BullBoardModule } from '@bull-board/nestjs';
+import { ExpressAdapter } from '@bull-board/express';
+import { BasicAuthMiddleware } from './utils/basic-auth.middleware';
 
 @Module({
   imports: [
@@ -30,10 +32,13 @@ import { Link } from '@server/links/link.entity';
         port: 6379,
       },
     }),
+    BullBoardModule.forRoot({
+      route: '/queues',
+      adapter: ExpressAdapter,
+      middleware: BasicAuthMiddleware,
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {
-  constructor(private dataSource: DataSource) {}
-}
+export class AppModule {}
