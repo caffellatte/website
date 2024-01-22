@@ -9,12 +9,25 @@ import { useLinkCreate } from "@client/services/hooks/useLinkCreate";
 import { useLinkFindById } from "@client/services/hooks/useLinkFindById";
 import { useLinksFindAll } from "@client/services/hooks/useLinksFindAll";
 import { useLinksAnalyze } from "@client/services/hooks/useLinksAnalyze";
+import { trpc } from "@client/services/trpc";
 
 const Home = () => {
   const linkCreate = useLinkCreate();
   const linkAnalyze = useLinksAnalyze();
   const links = useLinksFindAll();
   const link = useLinkFindById({ id: 1 });
+
+  trpc.randomNumber.useSubscription(
+    { odd: true },
+    {
+      onStarted() {
+        console.log("Started randomNumber subscription");
+      },
+      onData(data) {
+        console.log(data);
+      },
+    }
+  );
 
   console.log(link.data?.link);
   console.log(links.data?.links);
