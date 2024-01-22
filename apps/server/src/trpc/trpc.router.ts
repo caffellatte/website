@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { TrpcService } from '@server/trpc/trpc.service';
 import * as trpcExpress from '@trpc/server/adapters/express';
 import { LinksService } from '@server/links/links.service';
+import { observable } from '@trpc/server/observable';
 
 @Injectable()
 export class TrpcRouter {
@@ -23,6 +24,26 @@ export class TrpcRouter {
         return {
           greeting: `Hello ${name ? name : `Bilbo`}`,
         };
+      }),
+    randomNumber: this.trpc.procedure
+      .input(z.object({ odd: z.boolean() }))
+      .subscription(({ input }) => {
+        return observable<{ randomNumber: number }>((emit) => {
+          const timer = setInterval(() => {
+            // emits a number every second
+            let randomNumber = Math.round(Math.random() * 10000);
+            if (
+              (input.odd && randomNumber % 2 === 1) ||
+              (!input.odd && randomNumber % 2 === 0)
+            )
+              randomNumber++;
+            emit.next({ randomNumber });
+          }, 1000);
+
+          return () => {
+            clearInterval(timer);
+          };
+        });
       }),
     linksAnalyze: this.trpc.procedure
       .input(z.object({ type: z.string() }))
@@ -67,6 +88,7 @@ export class TrpcRouter {
       `/trpc`,
       trpcExpress.createExpressMiddleware({
         router: this.appRouter,
+        // createContext,
       }),
     );
   }
