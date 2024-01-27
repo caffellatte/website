@@ -25,25 +25,22 @@ export class TrpcRouter {
           greeting: `Hello ${name ? name : `Bilbo`}`,
         };
       }),
-    randomNumber: this.trpc.procedure
-      .input(z.object({ odd: z.boolean() }))
+    update: this.trpc.procedure
+      .input(z.object({ type: z.string() }))
       .subscription(({ input }) => {
-        return observable<{ randomNumber: number }>((emit) => {
-          const timer = setInterval(() => {
-            // emits a number every second
-            let randomNumber = Math.round(Math.random() * 10000);
-            if (
-              (input.odd && randomNumber % 2 === 1) ||
-              (!input.odd && randomNumber % 2 === 0)
-            )
-              randomNumber++;
-            emit.next({ randomNumber });
-          }, 1000);
-
-          return () => {
-            clearInterval(timer);
-          };
-        });
+        return observable<{ timestamp: number; type: 'links' | 'reports' }>(
+          (emit) => {
+            const onUpdate = ({ type }: { type: 'links' | 'reports' }) => {
+              if (input.type === type) {
+                emit.next({ timestamp: Date.now(), type: type });
+              }
+            };
+            this.trpc.ee.on('update', onUpdate);
+            return () => {
+              this.trpc.ee.off('update', onUpdate);
+            };
+          },
+        );
       }),
     linksAnalyze: this.trpc.procedure
       .input(z.object({ type: z.string() }))
@@ -62,7 +59,9 @@ export class TrpcRouter {
       .mutation(async ({ input }) => {
         const { title, description, url } = input;
         console.log('trpc.router.ts:', title, description, url);
-        return await this.links.create(title, description, url);
+        const links = await this.links.create(title, description, url);
+        this.trpc.ee.emit('update', { type: 'links' });
+        return links;
       }),
     linksFindAll: this.trpc.procedure
       .input(z.object({}).optional())
