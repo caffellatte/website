@@ -9,6 +9,13 @@ To set up the project locally, follow these steps:
 ```bash
 git clone https://github.com/caffellatte/website.git
 cd website
+pnpm install
+```
+
+## Use
+
+```bash
+pnpm dev
 ```
 
 ## Environment
