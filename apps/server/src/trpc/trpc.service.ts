@@ -7,4 +7,5 @@ export class TrpcService {
   procedure = this.trpc.procedure;
   router = this.trpc.router;
   mergeRouters = this.trpc.mergeRouters;
+  createCallerFactory = this.trpc.createCallerFactory;
 }

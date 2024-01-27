@@ -6,6 +6,8 @@ import { LinksProcessor } from '@server/links/links.processor';
 import { BullModule } from '@nestjs/bull';
 import { BullBoardModule } from '@bull-board/nestjs';
 import { BullAdapter } from '@bull-board/api/bullAdapter';
+import { TrpcRouter } from '@server/trpc/trpc.router';
+import { TrpcService } from '@server/trpc/trpc.service';
 
 @Module({
   imports: [
@@ -18,7 +20,7 @@ import { BullAdapter } from '@bull-board/api/bullAdapter';
     }),
     TypeOrmModule.forFeature([Link]),
   ],
-  providers: [LinksService, LinksProcessor],
+  providers: [LinksService, LinksProcessor, TrpcRouter, TrpcService],
   exports: [BullModule],
 })
 export class LinksModule {}
