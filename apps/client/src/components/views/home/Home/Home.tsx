@@ -16,21 +16,35 @@ const Home = () => {
   const linkAnalyze = useLinksAnalyze();
   const links = useLinksFindAll();
   const link = useLinkFindById({ id: 1 });
+  const utils = trpc.useUtils();
 
-  trpc.randomNumber.useSubscription(
-    { odd: true },
+  trpc.update.useSubscription(
+    { type: "links" },
     {
       onStarted() {
-        console.log("Started randomNumber subscription");
+        console.log("Started update subscription");
       },
       onData(data) {
         console.log(data);
+        utils.linksFindAll.invalidate();
+      },
+    }
+  );
+
+  trpc.update.useSubscription(
+    { type: "reports" },
+    {
+      onStarted() {
+        console.log("Started reports subscription");
+      },
+      onData(data) {
+        console.log(data);
+        utils.linksFindAll.invalidate();
       },
     }
   );
 
   console.log(link.data?.link);
-  console.log(links.data?.links);
 
   const handleLinkCreate = () => {
     linkCreate.mutate({
@@ -62,6 +76,10 @@ const Home = () => {
         <button onClick={handleLinksAnalyze} disabled={linkCreate.isLoading}>
           Analyze links
         </button>
+        <div className="flex flex-col gap-2">
+          {links.data?.links &&
+            links.data.links.map(({ id }) => <li key={id}>{id}</li>)}
+        </div>
       </div>
     </main>
   );

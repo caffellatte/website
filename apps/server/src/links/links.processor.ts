@@ -33,6 +33,7 @@ export class LinksProcessor {
       description: 'description server side created',
       url: 'url server side created',
     });
+    this.trpcService.ee.emit('update', { type: 'reports' });
     this.logger.debug(links);
     this.logger.debug('FindOne Analyze');
   }
