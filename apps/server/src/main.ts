@@ -4,6 +4,7 @@ import { TrpcRouter } from '@server/trpc/trpc.router';
 import { Server } from 'ws';
 import { applyWSSHandler } from '@trpc/server/adapters/ws';
 import { AppRouter } from '@server/trpc/trpc.router';
+import { createContext } from '@server/trpc/context';
 
 async function bootstrap() {
   const PORT = 4000;
@@ -16,7 +17,7 @@ async function bootstrap() {
   const wsHandler = applyWSSHandler<AppRouter>({
     wss,
     router: trpc.appRouter,
-    // createContext:
+    createContext,
   });
   wss.on('connection', (ws) => {
     console.log(`➕➕ Connection (${wss.clients.size})`);

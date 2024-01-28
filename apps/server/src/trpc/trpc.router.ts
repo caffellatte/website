@@ -4,6 +4,7 @@ import { TrpcService } from '@server/trpc/trpc.service';
 import * as trpcExpress from '@trpc/server/adapters/express';
 import { LinksService } from '@server/links/links.service';
 import { observable } from '@trpc/server/observable';
+import { createContext } from '@server/trpc/context';
 
 @Injectable()
 export class TrpcRouter {
@@ -87,7 +88,7 @@ export class TrpcRouter {
       `/trpc`,
       trpcExpress.createExpressMiddleware({
         router: this.appRouter,
-        // createContext,
+        createContext,
       }),
     );
   }
