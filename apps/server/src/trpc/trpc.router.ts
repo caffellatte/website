@@ -5,6 +5,7 @@ import * as trpcExpress from '@trpc/server/adapters/express';
 import { LinksService } from '@server/links/links.service';
 import { observable } from '@trpc/server/observable';
 import { createContext } from '@server/trpc/context';
+import { TRPCError } from '@trpc/server';
 
 @Injectable()
 export class TrpcRouter {
@@ -12,6 +13,19 @@ export class TrpcRouter {
     private readonly trpc: TrpcService,
     private readonly links: LinksService,
   ) {}
+
+  isAuthed = this.trpc.middleware(({ next, ctx }) => {
+    if (!ctx.auth) {
+      throw new TRPCError({ code: 'UNAUTHORIZED' });
+    }
+    return next({
+      ctx: {
+        auth: ctx.auth,
+      },
+    });
+  });
+
+  protectedProcedure = this.trpc.procedure.use(this.isAuthed);
 
   appRouter = this.trpc.router({
     hello: this.trpc.procedure

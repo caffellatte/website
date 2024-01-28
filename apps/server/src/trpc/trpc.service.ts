@@ -9,6 +9,7 @@ export class TrpcService {
   procedure = this.trpc.procedure;
   router = this.trpc.router;
   mergeRouters = this.trpc.mergeRouters;
+  middleware = this.trpc.middleware;
   createCallerFactory = this.trpc.createCallerFactory;
   ee = new EventEmitter();
 }
