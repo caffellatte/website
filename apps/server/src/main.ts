@@ -13,7 +13,6 @@ import { createContext } from '@server/trpc/context';
 import { TrpcRouter } from '@server/trpc/trpc.router';
 import { type AppRouter } from '@server/trpc/trpc.router';
 import { AppModule } from '@server/app.module';
-import cors from '@fastify/cors';
 
 async function bootstrap(): Promise<void> {
   const application = fastify({
@@ -42,8 +41,12 @@ async function bootstrap(): Promise<void> {
       },
     } satisfies FastifyTRPCPluginOptions<AppRouter>['trpcOptions'],
   });
-  await server.register(cors, {
-    // origin: 'localhost:3000',
+  // await server.register(cors, {
+  //   // origin: 'localhost:3000',
+  // });
+  app.enableCors({
+    credentials: true,
+    origin: '*',
   });
   // server.register(cors, {});
 
