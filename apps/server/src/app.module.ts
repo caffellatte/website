@@ -8,7 +8,7 @@ import { User } from '@server/users/user.entity';
 import { Link } from '@server/links/link.entity';
 import { BullBoardModule } from '@bull-board/nestjs';
 import { ExpressAdapter } from '@bull-board/express';
-import { BasicAuthMiddleware } from './utils/basic-auth.middleware';
+// import { BasicAuthMiddleware } from './utils/basic-auth.middleware';
 
 @Module({
   imports: [
@@ -35,7 +35,7 @@ import { BasicAuthMiddleware } from './utils/basic-auth.middleware';
     BullBoardModule.forRoot({
       route: '/queues',
       adapter: ExpressAdapter,
-      middleware: BasicAuthMiddleware,
+      // middleware: BasicAuthMiddleware,
     }),
   ],
   controllers: [AppController],

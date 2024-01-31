@@ -1,11 +1,8 @@
-import { INestApplication, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { z } from 'zod';
 import { TrpcService } from '@server/trpc/trpc.service';
-import * as trpcExpress from '@trpc/server/adapters/express';
 import { LinksService } from '@server/links/links.service';
 import { observable } from '@trpc/server/observable';
-import { createContext } from '@server/trpc/context';
-import { TRPCError } from '@trpc/server';
 
 @Injectable()
 export class TrpcRouter {
@@ -13,19 +10,6 @@ export class TrpcRouter {
     private readonly trpc: TrpcService,
     private readonly links: LinksService,
   ) {}
-
-  isAuthed = this.trpc.middleware(({ next, ctx }) => {
-    if (!ctx.auth) {
-      throw new TRPCError({ code: 'UNAUTHORIZED' });
-    }
-    return next({
-      ctx: {
-        auth: ctx.auth,
-      },
-    });
-  });
-
-  protectedProcedure = this.trpc.procedure.use(this.isAuthed);
 
   appRouter = this.trpc.router({
     hello: this.trpc.procedure
@@ -96,16 +80,6 @@ export class TrpcRouter {
         };
       }),
   });
-
-  async applyMiddleware(app: INestApplication) {
-    app.use(
-      `/trpc`,
-      trpcExpress.createExpressMiddleware({
-        router: this.appRouter,
-        createContext,
-      }),
-    );
-  }
 }
 
 export type AppRouter = TrpcRouter[`appRouter`];

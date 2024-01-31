@@ -10,11 +10,21 @@ import { useState } from "react";
 import { createWSClient, wsLink, splitLink } from "@trpc/client";
 
 const wsClient = createWSClient({
-  url: `ws://localhost:4000`,
+  url: `ws://localhost:4000/trpc`,
 });
 
 function Providers({ children }: React.PropsWithChildren) {
-  const [queryClient] = React.useState(new QueryClient());
+  const [queryClient] = React.useState(
+    new QueryClient({
+      // defaultOptions: {
+      //   queries: {
+      //     // staleTime: Infinity,
+      //     // refetchOnMount: false,
+      //     // refetchOnWindowFocus: false,
+      //   },
+      // },
+    })
+  );
   const [trpcClient] = useState(() =>
     trpc.createClient({
       links: [
@@ -27,6 +37,14 @@ function Providers({ children }: React.PropsWithChildren) {
           }),
           false: httpBatchLink({
             url: "http://localhost:4000/trpc",
+            // ?
+            // fetch(url, options) {
+            //   return fetch(url, {
+            //     ...options,
+            //     credentials: "include",
+            //   });
+            // },
+            // ?
             // You can pass any HTTP headers you wish here
             // async headers() {
             //     return {
