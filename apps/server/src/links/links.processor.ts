@@ -21,12 +21,15 @@ export class LinksProcessor {
     this.trpcRouter.appRouter,
   );
 
+  // caller = this.createCaller({ user: { name: 'bar' } });
+  // caller = this.createCaller({});
+
   @Process('analyze')
   async handleAnalyze(job: Job) {
     this.logger.debug('Start Analyze...');
     this.logger.debug(job.data);
-    const caller = this.createCaller({ user: job.data.user }); // TODO: create global caller function
     const links = await this.linksRepository.find();
+    const caller = this.createCaller({});
     caller.linkCreate({
       title: 'title server side created',
       description: 'description server side created',

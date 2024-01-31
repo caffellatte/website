@@ -1,36 +1,61 @@
+import fastify from 'fastify';
+import ws from '@fastify/websocket';
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from '@server/app.module';
-import { TrpcRouter } from '@server/trpc/trpc.router';
-import { Server } from 'ws';
-import { applyWSSHandler } from '@trpc/server/adapters/ws';
-import { AppRouter } from '@server/trpc/trpc.router';
+import {
+  FastifyAdapter,
+  NestFastifyApplication,
+} from '@nestjs/platform-fastify';
+import {
+  fastifyTRPCPlugin,
+  FastifyTRPCPluginOptions,
+} from '@trpc/server/adapters/fastify';
 import { createContext } from '@server/trpc/context';
+import { TrpcRouter } from '@server/trpc/trpc.router';
+import { type AppRouter } from '@server/trpc/trpc.router';
+import { AppModule } from '@server/app.module';
+import cors from '@fastify/cors';
 
-async function bootstrap() {
-  const PORT = 4000;
-  const app = await NestFactory.create(AppModule);
-  const server = app.getHttpServer();
-  const wss = new Server({ server });
-  app.enableCors();
-  const trpc = app.get(TrpcRouter);
-  trpc.applyMiddleware(app);
-  const wsHandler = applyWSSHandler<AppRouter>({
-    wss,
-    router: trpc.appRouter,
-    createContext,
+async function bootstrap(): Promise<void> {
+  const application = fastify({
+    maxParamLength: 5000,
   });
-  wss.on('connection', (ws) => {
-    console.log(`➕➕ Connection (${wss.clients.size})`);
-    ws.once('close', () => {
-      console.log(`➖➖ Connection (${wss.clients.size})`);
-    });
+
+  const app = new FastifyAdapter(application);
+
+  const server = await NestFactory.create<NestFastifyApplication>(
+    AppModule,
+    app,
+  );
+
+  const trpc = server.get(TrpcRouter);
+
+  server.register(ws);
+  server.register(fastifyTRPCPlugin, {
+    useWSS: true,
+    prefix: '/trpc',
+    trpcOptions: {
+      router: trpc.appRouter,
+      createContext,
+      onError({ path, error }) {
+        // report to error monitoring
+        console.error(`Error in tRPC handler on path '${path}':`, error);
+      },
+    } satisfies FastifyTRPCPluginOptions<AppRouter>['trpcOptions'],
   });
-  console.log(`✅ WebSocket Server listening on ws://localhost:${PORT}`);
-  process.on('SIGTERM', () => {
-    console.log('SIGTERM');
-    wsHandler.broadcastReconnectNotification();
-    // wss.close(); uncomment in prod
+  await server.register(cors, {
+    // origin: 'localhost:3000',
   });
-  await app.listen(PORT);
+  // server.register(cors, {});
+
+  await server.listen(4000);
+  // (async () => {
+  //   try {
+  //     await server.listen(4000);
+  //   } catch (err) {
+  //     console.log(err);
+  //     process.exit(1);
+  //   }
+  // })();
 }
+
 bootstrap();
