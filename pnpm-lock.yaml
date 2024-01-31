@@ -68,7 +68,6 @@ importers:
       '@bull-board/express': ^5.13.0
       '@bull-board/fastify': ^5.14.0
       '@bull-board/nestjs': ^5.13.0
-      '@fastify/cors': ^9.0.0
       '@fastify/websocket': ^8.3.1
       '@nestjs/bull': ^10.0.1
       '@nestjs/cli': ^10.0.0
@@ -111,7 +110,6 @@ importers:
       '@bull-board/express': 5.13.0
       '@bull-board/fastify': 5.14.0
       '@bull-board/nestjs': 5.13.0_34qgu25w2uy5h7pqkkz3k56mtq
-      '@fastify/cors': 9.0.0
       '@fastify/websocket': 8.3.1
       '@nestjs/bull': 10.0.1_7gf5dx6ognwreqrhcmgqz3kvu4
       '@nestjs/common': 10.3.0_rcbhqa4so6dtcde4mhxkgzk6je
@@ -724,13 +722,6 @@ packages:
 
   /@fastify/cors/8.5.0:
     resolution: {integrity: sha512-/oZ1QSb02XjP0IK1U0IXktEsw/dUBTxJOW7IpIeO8c/tNalw/KjoNSJv1Sf6eqoBPO+TDGkifq6ynFK3v68HFQ==}
-    dependencies:
-      fastify-plugin: 4.5.1
-      mnemonist: 0.39.6
-    dev: false
-
-  /@fastify/cors/9.0.0:
-    resolution: {integrity: sha512-KVsBFs2jZHbtN4vI/jJFaeRHXr3htB3koquGD5TwQQt/lmspyrS1a2UOBTlMOC/5hawC81vdoCzmiR03HbjdXg==}
     dependencies:
       fastify-plugin: 4.5.1
       mnemonist: 0.39.6
