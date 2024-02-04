@@ -41,24 +41,12 @@ async function bootstrap(): Promise<void> {
       },
     } satisfies FastifyTRPCPluginOptions<AppRouter>['trpcOptions'],
   });
-  // await server.register(cors, {
-  //   // origin: 'localhost:3000',
-  // });
   app.enableCors({
     credentials: true,
     origin: '*',
   });
-  // server.register(cors, {});
 
   await server.listen(4000);
-  // (async () => {
-  //   try {
-  //     await server.listen(4000);
-  //   } catch (err) {
-  //     console.log(err);
-  //     process.exit(1);
-  //   }
-  // })();
 }
 
 bootstrap();
