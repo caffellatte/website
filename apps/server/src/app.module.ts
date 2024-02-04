@@ -8,7 +8,6 @@ import { User } from '@server/users/user.entity';
 import { Link } from '@server/links/link.entity';
 import { BullBoardModule } from '@bull-board/nestjs';
 import { FastifyAdapter } from '@bull-board/fastify';
-// import { BasicAuthMiddleware } from './utils/basic-auth.middleware';
 
 @Module({
   imports: [
@@ -35,7 +34,6 @@ import { FastifyAdapter } from '@bull-board/fastify';
     BullBoardModule.forRoot({
       route: '/queues',
       adapter: FastifyAdapter,
-      // middleware: BasicAuthMiddleware,
     }),
   ],
   controllers: [AppController],
