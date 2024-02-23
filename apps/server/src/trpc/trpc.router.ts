@@ -12,6 +12,13 @@ export class TrpcRouter {
   ) {}
 
   appRouter = this.trpc.router({
+    register: this.trpc.procedure
+      .input(z.object({ username: z.string(), password: z.string() }))
+      .mutation(async ({ input }) => {
+        const { username, password } = input;
+        console.log(username, password);
+        return { username, password };
+      }),
     hello: this.trpc.procedure
       .input(
         z.object({

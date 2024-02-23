@@ -6,10 +6,14 @@ import { Typography } from "@client/components/ui/base/Typography";
 import { registerSchema, RegisterFormSchema } from "@client/types/auth";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRegister } from "@client/services/hooks/useRegister";
+import { useEffect } from "react";
 
 const resolver = zodResolver(registerSchema);
 
 const Register = () => {
+  const register = useRegister();
+
   const {
     reset,
     clearErrors,
@@ -19,11 +23,24 @@ const Register = () => {
     formState: { errors },
   } = useForm<RegisterFormSchema>({ resolver });
 
+  useEffect(() => {
+    console.log("data:", register.data);
+  }, [register.data]);
+
+  useEffect(() => {
+    console.log("error:", register.error);
+  }, [register.error]);
+
+  useEffect(() => {
+    console.log("isLoading:", register.isLoading);
+  }, [register.isLoading]);
+
   const onSubmit = async ({ username, password }: RegisterFormSchema) => {
     console.log(username, password);
     clearErrors("registerError");
     try {
-      // register({ username, password });
+      register.mutate({ username, password });
+
       reset();
     } catch (e) {
       setError("registerError", {
