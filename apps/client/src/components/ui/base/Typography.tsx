@@ -41,6 +41,7 @@ const typographyVariants = cva("text-base font-normal", {
       main: "text-foreground",
       accent: "text-accent",
       white: "text-white",
+      error: "text-error",
     },
   },
   defaultVariants: {
