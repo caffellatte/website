@@ -13,11 +13,8 @@ const Register = () => {
   const {
     reset,
     clearErrors,
-    register,
     handleSubmit,
-    setFocus,
     setError,
-    setValue,
     control,
     formState: { errors },
   } = useForm<RegisterFormSchema>({ resolver });
