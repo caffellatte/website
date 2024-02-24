@@ -5,10 +5,13 @@ import { LinksService } from '@server/links/links.service';
 import { LinksModule } from '@server/links/links.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Link } from '@server/links/link.entity';
+import { User } from '@server/users/user.entity';
+import { UsersModule } from '@server/users/users.module';
+import { UsersService } from '@server/users/users.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Link]), LinksModule],
+  imports: [TypeOrmModule.forFeature([Link, User]), LinksModule, UsersModule],
   controllers: [],
-  providers: [TrpcService, TrpcRouter, LinksService],
+  providers: [TrpcService, TrpcRouter, LinksService, UsersService],
 })
 export class TrpcModule {}
