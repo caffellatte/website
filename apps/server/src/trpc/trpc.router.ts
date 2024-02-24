@@ -3,12 +3,14 @@ import { z } from 'zod';
 import { TrpcService } from '@server/trpc/trpc.service';
 import { LinksService } from '@server/links/links.service';
 import { observable } from '@trpc/server/observable';
+import { UsersService } from '@server/users/users.service';
 
 @Injectable()
 export class TrpcRouter {
   constructor(
     private readonly trpc: TrpcService,
     private readonly links: LinksService,
+    private readonly users: UsersService,
   ) {}
 
   appRouter = this.trpc.router({
@@ -16,8 +18,8 @@ export class TrpcRouter {
       .input(z.object({ username: z.string(), password: z.string() }))
       .mutation(async ({ input }) => {
         const { username, password } = input;
-        console.log(username, password);
-        return { username, password };
+        const user = await this.users.create(username, password);
+        return user;
       }),
     hello: this.trpc.procedure
       .input(
