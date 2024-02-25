@@ -56,9 +56,10 @@ const Home = () => {
 
   const handleLinksAnalyze = () => {
     linkAnalyze.mutate({
-      type: "test",
+      type: "reports",
     });
   };
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-12">
       <div className="flex flex-col gap-3 text-center">
