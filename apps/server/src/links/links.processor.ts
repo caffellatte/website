@@ -4,14 +4,12 @@ import { Job } from 'bull';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Link } from '@server/links/link.entity';
-import { TrpcService } from '@server/trpc/trpc.service';
 
 @Processor('links')
 export class LinksProcessor {
   constructor(
     @InjectRepository(Link)
     private linksRepository: Repository<Link>,
-    private readonly trpcService: TrpcService,
   ) {}
   private readonly logger = new Logger(LinksProcessor.name);
 
@@ -20,8 +18,8 @@ export class LinksProcessor {
     this.logger.debug('Start Analyze...');
     this.logger.debug(job.data);
     const links = await this.linksRepository.find();
-    this.trpcService.ee.emit('update', { type: 'reports' });
-    this.logger.debug(links);
-    this.logger.debug('FindOne Analyze');
+    this.logger.debug(links.length);
+    this.logger.debug('End Analyze');
+    return job.data;
   }
 }

@@ -1,17 +1,32 @@
-import { Injectable } from '@nestjs/common';
 import { z } from 'zod';
+import { Queue } from 'bull';
+import { EventEmitter } from 'events';
+import { Injectable } from '@nestjs/common';
+import { observable } from '@trpc/server/observable';
 import { TrpcService } from '@server/trpc/trpc.service';
 import { LinksService } from '@server/links/links.service';
-import { observable } from '@trpc/server/observable';
 import { UsersService } from '@server/users/users.service';
+import { OnGlobalQueueCompleted, InjectQueue, Processor } from '@nestjs/bull';
 
+@Processor('links')
 @Injectable()
 export class TrpcRouter {
+  ee = new EventEmitter();
+
   constructor(
     private readonly trpc: TrpcService,
     private readonly links: LinksService,
     private readonly users: UsersService,
+    @InjectQueue('links') private readonly linksQueue: Queue,
   ) {}
+
+  @OnGlobalQueueCompleted()
+  async onGlobalCompleted(jobId: number, result: any) {
+    const job = await this.linksQueue.getJob(jobId);
+    if (job?.queue.name === 'links' && 'analyze' === job?.name) {
+      this.ee.emit('update', JSON.parse(result));
+    }
+  }
 
   appRouter = this.trpc.router({
     register: this.trpc.procedure
@@ -43,9 +58,9 @@ export class TrpcRouter {
                 emit.next({ timestamp: Date.now(), type: type });
               }
             };
-            this.trpc.ee.on('update', onUpdate);
+            this.ee.on('update', onUpdate);
             return () => {
-              this.trpc.ee.off('update', onUpdate);
+              this.ee.off('update', onUpdate);
             };
           },
         );
@@ -68,7 +83,7 @@ export class TrpcRouter {
         const { title, description, url } = input;
         console.log('trpc.router.ts:', title, description, url);
         const links = await this.links.create(title, description, url);
-        this.trpc.ee.emit('update', { type: 'links' });
+        this.ee.emit('update', { type: 'links' });
         return links;
       }),
     linksFindAll: this.trpc.procedure
