@@ -6,10 +6,14 @@ import { Typography } from "@client/components/ui/base/Typography";
 import { loginSchema, LoginFormSchema } from "@client/types/auth";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useLogin } from "@client/services/hooks/useLogin";
+import { useEffect } from "react";
 
 const resolver = zodResolver(loginSchema);
 
 const Login = () => {
+  const login = useLogin();
+
   const {
     reset,
     clearErrors,
@@ -19,11 +23,23 @@ const Login = () => {
     formState: { errors },
   } = useForm<LoginFormSchema>({ resolver });
 
+  useEffect(() => {
+    console.log("data:", login.data);
+  }, [login.data]);
+
+  useEffect(() => {
+    console.log("error:", login.error);
+  }, [login.error]);
+
+  useEffect(() => {
+    console.log("isLoading:", login.isLoading);
+  }, [login.isLoading]);
+
   const onSubmit = async ({ username, password }: LoginFormSchema) => {
     console.log(username, password);
     clearErrors("loginError");
     try {
-      // login({ username, password });
+      login.mutate({ username, password });
       reset();
     } catch (e) {
       setError("loginError", {

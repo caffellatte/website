@@ -8,9 +8,15 @@ import { User } from '@server/users/user.entity';
 import { Link } from '@server/links/link.entity';
 import { BullBoardModule } from '@bull-board/nestjs';
 import { FastifyAdapter } from '@bull-board/fastify';
+import { ConfigModule } from '@nestjs/config';
+import configuration from '@server/config/configuration';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      envFilePath: '.env',
+      load: [configuration],
+    }),
     TrpcModule,
     TypeOrmModule.forRoot({
       type: 'postgres',

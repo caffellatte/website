@@ -4,6 +4,7 @@ import { EventEmitter } from 'events';
 import { Injectable } from '@nestjs/common';
 import { observable } from '@trpc/server/observable';
 import { TrpcService } from '@server/trpc/trpc.service';
+import { AuthService } from '@server/auth/auth.service';
 import { LinksService } from '@server/links/links.service';
 import { UsersService } from '@server/users/users.service';
 import { OnGlobalQueueCompleted, InjectQueue, Processor } from '@nestjs/bull';
@@ -15,6 +16,7 @@ export class TrpcRouter {
 
   constructor(
     private readonly trpc: TrpcService,
+    private readonly auth: AuthService,
     private readonly links: LinksService,
     private readonly users: UsersService,
     @InjectQueue('links') private readonly linksQueue: Queue,
@@ -34,6 +36,13 @@ export class TrpcRouter {
       .mutation(async ({ input }) => {
         const { username, password } = input;
         const user = await this.users.create(username, password);
+        return user;
+      }),
+    login: this.trpc.procedure
+      .input(z.object({ username: z.string(), password: z.string() }))
+      .mutation(async ({ input }) => {
+        const { username, password } = input;
+        const user = await this.auth.signIn(username, password);
         return user;
       }),
     hello: this.trpc.procedure
