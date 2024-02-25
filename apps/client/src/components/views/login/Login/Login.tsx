@@ -28,8 +28,11 @@ const Login = () => {
   }, [login.data]);
 
   useEffect(() => {
-    console.log("error:", login.error);
-  }, [login.error]);
+    setError("loginError", {
+      type: "custom",
+      message: login.error?.message,
+    });
+  }, [login.error, setError]);
 
   useEffect(() => {
     console.log("isLoading:", login.isLoading);
@@ -44,7 +47,7 @@ const Login = () => {
     } catch (e) {
       setError("loginError", {
         type: "custom",
-        message: "Login Error",
+        message: "Login error",
       });
     }
   };
@@ -52,7 +55,7 @@ const Login = () => {
   return (
     <section className="h-screen flex flex-col flex-grow items-center justify-center">
       <form
-        className="min-w-[320px] flex flex-col gap-4"
+        className="w-[320px] flex flex-col gap-4"
         onSubmit={handleSubmit(onSubmit)}
       >
         <div className="flex flex-col gap-2">
