@@ -4,19 +4,30 @@ import jwt = require('jsonwebtoken');
 import { CreateFastifyContextOptions } from '@trpc/server/adapters/fastify';
 
 export async function createContext({ req }: CreateFastifyContextOptions) {
-  if (req.headers.authorization) {
-    const secretKey = process.env.JWT_SECRET || '';
-    jwt.verify(req.headers.authorization, secretKey, (err, decoded) => {
-      if (err) {
-        console.log();
-        throw new TRPCError({
-          code: 'UNAUTHORIZED',
-          message: err.message,
-        });
-      }
-      return { user: decoded };
+  const verifyJwtPromise = (
+    token: string,
+    secret: string,
+  ): Promise<jwt.JwtPayload | undefined | string> => {
+    return new Promise((resolve, reject) => {
+      jwt.verify(token, secret, (err, decoded) => {
+        if (err) return reject(err);
+        resolve(decoded);
+      });
     });
+  };
+  if (req.headers.authorization) {
+    const user = await verifyJwtPromise(
+      req.headers.authorization,
+      process.env.JWT_SECRET ?? '',
+    ).catch((err) => {
+      throw new TRPCError({
+        code: 'UNAUTHORIZED',
+        message: err.message,
+      });
+    });
+    return { user };
+  } else {
+    return {};
   }
-  return {};
 }
 export type Context = Awaited<ReturnType<typeof createContext>>;
