@@ -6,7 +6,8 @@ export default registerAs('jwt', () => {
       process.env.JWT_SECRET ||
       'DO NOT USE THIS VALUE. INSTEAD, CREATE A COMPLEX SECRET AND KEEP IT SAFE OUTSIDE OF THE SOURCE CODE.',
     global: true,
-    signOptions: { expiresIn: '60s' },
+    signOptions: { expiresIn: '1d' },
+    // signOptions: { expiresIn: '60s' },
     // issuer: process.env.JWT_TOKEN_ISSUER,
     // accessTokenTtl: parseInt(process.env.JWT_TOKEN_TTL),
   };
