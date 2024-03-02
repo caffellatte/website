@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { Queue } from 'bull';
 import { EventEmitter } from 'events';
+import { TRPCError } from '@trpc/server';
 import { Injectable } from '@nestjs/common';
 import { observable } from '@trpc/server/observable';
 import { TrpcService } from '@server/trpc/trpc.service';
@@ -29,6 +30,18 @@ export class TrpcRouter {
       this.ee.emit('update', JSON.parse(result));
     }
   }
+
+  protectedProcedure = this.trpc.procedure.use(async function isAuthed(opts) {
+    const { ctx } = opts;
+    if (!ctx.user) {
+      throw new TRPCError({ code: 'UNAUTHORIZED' });
+    }
+    return opts.next({
+      ctx: {
+        user: ctx.user,
+      },
+    });
+  });
 
   appRouter = this.trpc.router({
     register: this.trpc.procedure
@@ -80,7 +93,7 @@ export class TrpcRouter {
         const { type } = input;
         return await this.links.analyze(type);
       }),
-    linkCreate: this.trpc.procedure
+    linkCreate: this.protectedProcedure
       .input(
         z.object({
           title: z.string(),
