@@ -1,14 +1,21 @@
 import * as bcrypt from 'bcrypt';
 import { TRPCError } from '@trpc/server';
+import { JwtService } from '@nestjs/jwt';
 import { Logger, Injectable } from '@nestjs/common';
 import { UsersService } from '@server/users/users.service';
 
 @Injectable()
 export class AuthService {
-  constructor(private usersService: UsersService) {}
+  constructor(
+    private usersService: UsersService,
+    private jwtService: JwtService,
+  ) {}
   private readonly logger = new Logger(AuthService.name);
 
-  async signIn(username: string, pass: string): Promise<any> {
+  async signIn(
+    username: string,
+    pass: string,
+  ): Promise<{ access_token: string }> {
     const user = await this.usersService.findOneByUsername(username);
     if (!user) {
       throw new TRPCError({
@@ -25,8 +32,9 @@ export class AuthService {
         message: 'Incorrect password. Please try again.',
       });
     }
-    const { password, ...result } = user;
-    this.logger.debug(password);
-    return result;
+    const payload = { sub: user.id, username: user.username };
+    return {
+      access_token: await this.jwtService.signAsync(payload),
+    };
   }
 }
