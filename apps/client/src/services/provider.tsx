@@ -8,6 +8,7 @@ import { httpBatchLink } from "@trpc/client";
 import { trpc } from "@client/services/trpc";
 import { useState } from "react";
 import { createWSClient, wsLink, splitLink } from "@trpc/client";
+import Cookies from "js-cookie";
 
 const wsClient = createWSClient({
   url: `ws://localhost:4000/trpc`,
@@ -46,11 +47,11 @@ function Providers({ children }: React.PropsWithChildren) {
             // },
             // ?
             // You can pass any HTTP headers you wish here
-            // async headers() {
-            //     return {
-            //         ...headers
-            //     };
-            // },
+            async headers() {
+              return {
+                Authorization: Cookies.get("access_token"),
+              };
+            },
           }),
         }),
       ],

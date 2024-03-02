@@ -4,6 +4,7 @@ import {
   type RouterInputs,
   type RouterOutputs,
 } from "@client/services/trpc";
+import Cookies from "js-cookie";
 
 type LoginOptions = ReactQueryOptions["login"];
 
@@ -17,6 +18,9 @@ export function useLogin(options?: LoginOptions) {
       // when a new link is created
       // utils.linkCreate.invalidate();
       // utils.linksFindAll.invalidate();
+      if (data?.access_token) {
+        Cookies.set("access_token", data.access_token, { expires: 1 });
+      }
       utils.invalidate();
       options?.onSuccess?.(data, variables, context);
     },
