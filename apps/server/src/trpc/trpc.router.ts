@@ -58,11 +58,11 @@ export class TrpcRouter {
         const payload = await this.auth.signIn(username, password);
         return payload;
       }),
-    refreshToken: this.trpc.procedure
+    refresh: this.trpc.procedure
       .input(z.object({ refresh_token: z.string() }))
       .query(async ({ input }) => {
         const { refresh_token } = input;
-        const payload = await this.auth.refreshToken(refresh_token);
+        const payload = await this.auth.refresh(refresh_token);
         return payload;
       }),
     hello: this.trpc.procedure
