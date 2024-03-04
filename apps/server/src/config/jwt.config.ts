@@ -6,7 +6,7 @@ export default registerAs('jwt', () => {
       process.env.JWT_ACCESS_SECRET ||
       'DO NOT USE THIS VALUE. INSTEAD, CREATE A COMPLEX SECRET AND KEEP IT SAFE OUTSIDE OF THE SOURCE CODE.',
     global: true,
-    signOptions: { expiresIn: '60s' },
+    signOptions: { expiresIn: '15m' },
     refreshSecret:
       process.env.JWT_REFRESH_SECRET ||
       'DO NOT USE THIS VALUE. INSTEAD, CREATE A COMPLEX SECRET AND KEEP IT SAFE OUTSIDE OF THE SOURCE CODE.',

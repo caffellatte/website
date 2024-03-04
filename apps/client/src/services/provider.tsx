@@ -1,14 +1,15 @@
 "use client";
 
 import React from "react";
-import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experimental";
+import Cookies from "js-cookie";
+import { useState } from "react";
+import { handleTrpcUnauthError } from "./utils";
 import { httpBatchLink } from "@trpc/client";
 import { trpc } from "@client/services/trpc";
-import { useState } from "react";
 import { createWSClient, wsLink, splitLink } from "@trpc/client";
-import Cookies from "js-cookie";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experimental";
 
 const wsClient = createWSClient({
   url: `ws://localhost:4000/trpc`,
@@ -51,6 +52,13 @@ function Providers({ children }: React.PropsWithChildren) {
               return {
                 Authorization: Cookies.get("access_token"),
               };
+            },
+            fetch: async (url, options): Promise<Response> => {
+              const res = await fetch(url, options);
+              if (res.status === 401) {
+                return await handleTrpcUnauthError(res, url, options);
+              }
+              return res;
             },
           }),
         }),
