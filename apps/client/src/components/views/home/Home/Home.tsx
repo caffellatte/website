@@ -1,22 +1,45 @@
 "use client";
 
-import Link from "next/link";
 import {
   Typography,
   typographyVariants,
 } from "@client/components/ui/base/Typography";
 import { useLinkCreate } from "@client/services/hooks/useLinkCreate";
 import { useLinkFindById } from "@client/services/hooks/useLinkFindById";
-import { useLinksFindAll } from "@client/services/hooks/useLinksFindAll";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+// import { useLinksFindAll } from "@client/services/hooks/useLinksFindAll";
 import { useLinksAnalyze } from "@client/services/hooks/useLinksAnalyze";
 import { trpc } from "@client/services/trpc";
 
 const Home = () => {
+  const [links, setLinks] = useState<
+    | { title: string; description: string; url: string; id: number }[]
+    | undefined
+  >();
   const linkCreate = useLinkCreate();
   const linkAnalyze = useLinksAnalyze();
-  const links = useLinksFindAll();
+  // const links = useLinksFindAll();
   const link = useLinkFindById({ id: 1 });
   const utils = trpc.useUtils();
+  const infiniteLinks = trpc.infiniteLinks.useInfiniteQuery(
+    {
+      limit: 5,
+    },
+    {
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+      // initialCursor: 1, // <-- optional you can pass an initialCursor
+    },
+  );
+
+  useEffect(() => {
+    const arrays = infiniteLinks.data?.pages.map((page) => page.links);
+    const result = arrays?.reduce(
+      (accumulator, links) => [...accumulator, ...links],
+      [],
+    );
+    setLinks(result);
+  }, [infiniteLinks.data?.pages]);
 
   trpc.update.useSubscription(
     { type: "links" },
@@ -28,7 +51,7 @@ const Home = () => {
         console.log(data);
         utils.linksFindAll.invalidate();
       },
-    }
+    },
   );
 
   trpc.update.useSubscription(
@@ -41,7 +64,7 @@ const Home = () => {
         console.log(data);
         utils.linksFindAll.invalidate();
       },
-    }
+    },
   );
 
   console.log(link.data?.link);
@@ -71,16 +94,23 @@ const Home = () => {
         >
           github.com/caffellatte
         </Link>
-        <button onClick={handleLinkCreate} disabled={linkCreate.isLoading}>
+        <button onClick={handleLinkCreate} disabled={linkCreate.isPending}>
           Create link
         </button>
-        <button onClick={handleLinksAnalyze} disabled={linkCreate.isLoading}>
+        <button onClick={handleLinksAnalyze} disabled={linkCreate.isPending}>
           Analyze links
         </button>
         <div className="flex flex-col gap-2">
-          {links.data?.links &&
-            links.data.links.map(({ id }) => <li key={id}>{id}</li>)}
+          {links && links.map(({ id }) => <li key={id}>{id}</li>)}
         </div>
+        <button
+          onClick={() => {
+            infiniteLinks.fetchNextPage();
+          }}
+          disabled={infiniteLinks.isLoading}
+        >
+          Fetch Next Page
+        </button>
       </div>
     </main>
   );

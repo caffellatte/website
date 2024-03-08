@@ -17,6 +17,21 @@ export class LinksService {
     return this.linksRepository.find();
   }
 
+  async find(
+    cursor: number,
+    limit: number,
+  ): Promise<{ data: Link[]; total: number }> {
+    const [result, total] = await this.linksRepository.findAndCount({
+      order: { id: 'DESC' },
+      take: limit,
+      skip: cursor,
+    });
+    return {
+      data: result,
+      total: total,
+    };
+  }
+
   findOne(id: number): Promise<Link | null> {
     return this.linksRepository.findOneBy({ id });
   }

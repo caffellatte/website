@@ -123,6 +123,24 @@ export class TrpcRouter {
           links: links,
         };
       }),
+    infiniteLinks: this.trpc.procedure
+      .input(
+        z.object({
+          limit: z.number().min(1).max(20).nullish(),
+          cursor: z.number().nullish(),
+        }),
+      )
+      .query(async ({ input }) => {
+        const cursor = input.cursor ?? 0;
+        const limit = input.limit ?? 10;
+        const { data, total } = await this.links.find(cursor, limit);
+        const nextCursor = cursor + limit;
+        return {
+          links: data,
+          total: total,
+          nextCursor,
+        };
+      }),
     linkFindById: this.trpc.procedure
       .input(z.object({ id: z.number() }))
       .query(async ({ input }) => {
