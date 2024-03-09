@@ -7,7 +7,7 @@ import {
 import { useLinkCreate } from "@client/services/hooks/useLinkCreate";
 import { useLinkFindById } from "@client/services/hooks/useLinkFindById";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 // import { useLinksFindAll } from "@client/services/hooks/useLinksFindAll";
 import { useLinksAnalyze } from "@client/services/hooks/useLinksAnalyze";
 import { trpc } from "@client/services/trpc";
@@ -31,6 +31,14 @@ const Home = () => {
       // initialCursor: 1, // <-- optional you can pass an initialCursor
     },
   );
+
+  const totalLinks = useMemo(() => {
+    const total = infiniteLinks.data?.pages.at(0)?.total;
+    if (total) return total;
+    return 0;
+  }, [infiniteLinks.data?.pages?.at(0)?.total]);
+
+  console.log(infiniteLinks.data);
 
   useEffect(() => {
     const arrays = infiniteLinks.data?.pages.map((page) => page.links);
@@ -103,14 +111,16 @@ const Home = () => {
         <div className="flex flex-col gap-2">
           {links && links.map(({ id }) => <li key={id}>{id}</li>)}
         </div>
-        <button
-          onClick={() => {
-            infiniteLinks.fetchNextPage();
-          }}
-          disabled={infiniteLinks.isLoading}
-        >
-          Fetch Next Page
-        </button>
+        {links?.length && totalLinks > links?.length && (
+          <button
+            onClick={() => {
+              infiniteLinks.fetchNextPage();
+            }}
+            disabled={infiniteLinks.isLoading}
+          >
+            Fetch Next Page
+          </button>
+        )}
       </div>
     </main>
   );
