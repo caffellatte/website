@@ -1,15 +1,17 @@
+import { FastifyAdapter } from '@bull-board/fastify';
+import { BullBoardModule } from '@bull-board/nestjs';
+import { BullModule } from '@nestjs/bull';
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from '@server/app.controller';
 import { AppService } from '@server/app.service';
-import { TrpcModule } from '@server/trpc/trpc.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { BullModule } from '@nestjs/bull';
-import { User } from '@server/users/user.entity';
-import { Link } from '@server/links/link.entity';
-import { BullBoardModule } from '@bull-board/nestjs';
-import { FastifyAdapter } from '@bull-board/fastify';
-import { ConfigModule } from '@nestjs/config';
 import configuration from '@server/config/configuration';
+import { Link } from '@server/links/link.entity';
+import { TrpcModule } from '@server/trpc/trpc.module';
+import { User } from '@server/users/user.entity';
+import { Collection } from './collections/collection.entity';
+import { CollectionsModule } from './collections/collections.module';
 
 @Module({
   imports: [
@@ -25,7 +27,7 @@ import configuration from '@server/config/configuration';
       username: 'pguser',
       password: 'password',
       database: 'db',
-      entities: [User, Link],
+      entities: [User, Link, Collection],
       synchronize: true, // shouldn't be used in production
       logging: true,
       autoLoadEntities: true,
@@ -41,6 +43,7 @@ import configuration from '@server/config/configuration';
       route: '/queues',
       adapter: FastifyAdapter,
     }),
+    CollectionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
