@@ -1,0 +1,95 @@
+# Config
+vars: {
+  d2-config: {
+    layout-engine: elk
+  }
+}
+
+direction: down
+frontend.trpc <-> backend.trpc
+
+# Frontend
+frontend: {
+  label: Frontend
+  trpc: {
+    label: tRPC
+    icon: https://trpc.io/img/logo.svg
+  }
+  nextjs: {
+    label: Next.js
+    icon: https://camo.githubusercontent.com/9771a2d4a7366d3c6d4793e17104eba9e88f0aec82f7165bfe6871455c26cb2c/68747470733a2f2f6173736574732e76657263656c2e636f6d2f696d6167652f75706c6f61642f76313636323133303535392f6e6578746a732f49636f6e5f6461726b5f6261636b67726f756e642e706e67
+  }
+  query: {
+    label: TanStack Query
+    icon: https://raw.githubusercontent.com/TanStack/query/main/media/emblem-light.svg
+  }
+  shadcn: {
+    label: shadcn/ui
+    icon: https://ui.shadcn.com/apple-touch-icon.png
+  }
+  tailwindcss: {
+    label: Tailwindcss
+    icon: https://upload.wikimedia.org/wikipedia/commons/d/d5/Tailwind_CSS_Logo.svg
+  }
+  animejs: {
+    label: Anime.js
+    icon: https://animejs.com/documentation/assets/img/apple-touch-icon.png
+  }
+  zod: {
+    label: Zod
+    icon: https://zod.dev/logo.svg
+  }
+  cva: {
+    label: CVA
+    icon: https://cva.style/assets/img/favicon.png
+  }
+}
+
+# Backend
+backend : {
+  label: Backend
+  trpc: {
+    label: tRPC
+    icon: https://trpc.io/img/logo.svg
+  }
+  nestjs: {
+    label: NestJS
+    icon: https://nestjs.com/logo-small.ede75a6b.svg
+  }
+  postgres: {
+    label: Postgres
+    icon: https://icons.terrastruct.com/dev%2Fpostgresql.svg
+  }
+  bull: {
+    label: Bull
+    icon: https://raw.githubusercontent.com/OptimalBits/bull/master/support/logo%402x.png
+  }
+  redis: {
+    label: Redis
+    icon: https://icons.terrastruct.com/dev%2Fredis.svg
+  }
+  zod: {
+    label: Zod
+    icon: https://zod.dev/logo.svg
+  }
+  fastify: {
+    label: Fastify
+    icon: https://raw.githubusercontent.com/fastify/graphics/master/short-logo.png
+  }
+  typeorm: {
+    label: TypeORM
+    icon: https://typeorm.io/image/favicon/apple-touch-icon.png
+  }
+  bcrypt {
+    label: bcrypt
+    icon: https://icons.terrastruct.com/essentials%2F216-key.svg
+  }
+  jsonwebtoken {
+    label: jsonwebtoken
+    icon: https://icons.terrastruct.com/essentials%2F216-key.svg
+  }
+  ws: {
+    label: ws
+    icon: https://icons.terrastruct.com/infra%2F014-network.svg
+  }
+}
