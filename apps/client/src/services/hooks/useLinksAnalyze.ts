@@ -5,12 +5,12 @@ import {
   type RouterOutputs,
 } from "@client/services/trpc";
 
-type LinksAnalyzeOptions = ReactQueryOptions["linksAnalyze"];
+type LinksAnalyzeOptions = ReactQueryOptions["hyperlinks"]["analyze"];
 
 export function useLinksAnalyze(options?: LinksAnalyzeOptions) {
   const utils = trpc.useUtils();
 
-  return trpc.linksAnalyze.useMutation({
+  return trpc.hyperlinks.analyze.useMutation({
     ...options,
     onSuccess(data, variables, context) {
       // invalidate all queries on the link router

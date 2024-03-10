@@ -17,7 +17,7 @@ export class LinksService {
     return this.linksRepository.find();
   }
 
-  async find(
+  async get(
     cursor: number,
     limit: number,
   ): Promise<{ data: Link[]; total: number }> {

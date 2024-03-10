@@ -1,11 +1,11 @@
 import { ReactQueryOptions, RouterInputs, trpc } from "@client/services/trpc";
 
-type LinkByIdOptions = ReactQueryOptions["linksFindAll"];
-type LinkByIdInput = RouterInputs["linksFindAll"];
+type LinkByIdOptions = ReactQueryOptions["hyperlinks"]["findAll"];
+type LinkByIdInput = RouterInputs["hyperlinks"]["findAll"];
 
 export function useLinksFindAll(
   input: LinkByIdInput,
-  options?: LinkByIdOptions
+  options?: LinkByIdOptions,
 ) {
-  return trpc.linksFindAll.useQuery(input, options);
+  return trpc.hyperlinks.findAll.useQuery(input, options);
 }

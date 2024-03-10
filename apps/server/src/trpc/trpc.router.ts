@@ -31,6 +31,9 @@ export class TrpcRouter {
     }
   }
 
+  /**
+   * Protected Procedure
+   */
   protectedProcedure = this.trpc.procedure.use(async function isAuthed(opts) {
     const { ctx } = opts;
     if (!ctx.user) {
@@ -43,19 +46,24 @@ export class TrpcRouter {
     });
   });
 
-  appRouter = this.trpc.router({
+  /**
+   * Auth Router
+   */
+  authRouter = this.trpc.router({
     register: this.trpc.procedure
       .input(z.object({ username: z.string(), password: z.string() }))
       .mutation(async ({ input }) => {
-        const { username, password } = input;
-        const user = await this.users.create(username, password);
-        return user;
+        const payload = await this.auth.register(
+          input.username,
+          input.password,
+        );
+        return payload;
       }),
     login: this.trpc.procedure
       .input(z.object({ username: z.string(), password: z.string() }))
       .mutation(async ({ input }) => {
         const { username, password } = input;
-        const payload = await this.auth.signIn(username, password);
+        const payload = await this.auth.login(username, password);
         return payload;
       }),
     refresh: this.trpc.procedure
@@ -65,18 +73,76 @@ export class TrpcRouter {
         const payload = await this.auth.refresh(refresh_token);
         return payload;
       }),
-    hello: this.trpc.procedure
+  });
+
+  /**
+   * Links Router
+   */
+  hyperlinksRouter = this.trpc.router({
+    analyze: this.trpc.procedure
+      .input(z.object({ type: z.string() }))
+      .mutation(async ({ input }) => {
+        const { type } = input;
+        return await this.links.analyze(type);
+      }),
+    create: this.protectedProcedure
       .input(
         z.object({
-          name: z.string().optional(),
+          title: z.string(),
+          description: z.string(),
+          url: z.string(),
         }),
       )
-      .query(({ input }) => {
-        const { name } = input;
+      .mutation(async ({ input }) => {
+        const { title, description, url } = input;
+        console.log('trpc.router.ts:', title, description, url);
+        const links = await this.links.create(title, description, url);
+        this.ee.emit('update', { type: 'links' });
+        return links;
+      }),
+    findAll: this.trpc.procedure
+      .input(z.object({}).optional())
+      .query(async () => {
+        const links = await this.links.findAll();
         return {
-          greeting: `Hello ${name ? name : `Bilbo`}`,
+          links: links,
         };
       }),
+    get: this.trpc.procedure
+      .input(
+        z.object({
+          limit: z.number().min(1).max(20).nullish(),
+          cursor: z.number().nullish(),
+        }),
+      )
+      .query(async ({ input }) => {
+        const cursor = input.cursor ?? 0;
+        const limit = input.limit ?? 10;
+        const { data, total } = await this.links.get(cursor, limit);
+        const nextCursor = cursor + limit;
+        return {
+          links: data,
+          total: total,
+          nextCursor,
+        };
+      }),
+    findById: this.trpc.procedure
+      .input(z.object({ id: z.number() }))
+      .query(async ({ input }) => {
+        const { id } = input;
+        const link = await this.links.findOne(id);
+        return {
+          link: link,
+        };
+      }),
+  });
+
+  /**
+   * App Router
+   */
+  appRouter = this.trpc.router({
+    hyperlinks: this.hyperlinksRouter,
+    auth: this.authRouter,
     update: this.trpc.procedure
       .input(z.object({ type: z.string() }))
       .subscription(({ input }) => {
@@ -93,62 +159,6 @@ export class TrpcRouter {
             };
           },
         );
-      }),
-    linksAnalyze: this.trpc.procedure
-      .input(z.object({ type: z.string() }))
-      .mutation(async ({ input }) => {
-        const { type } = input;
-        return await this.links.analyze(type);
-      }),
-    linkCreate: this.protectedProcedure
-      .input(
-        z.object({
-          title: z.string(),
-          description: z.string(),
-          url: z.string(),
-        }),
-      )
-      .mutation(async ({ input }) => {
-        const { title, description, url } = input;
-        console.log('trpc.router.ts:', title, description, url);
-        const links = await this.links.create(title, description, url);
-        this.ee.emit('update', { type: 'links' });
-        return links;
-      }),
-    linksFindAll: this.trpc.procedure
-      .input(z.object({}).optional())
-      .query(async () => {
-        const links = await this.links.findAll();
-        return {
-          links: links,
-        };
-      }),
-    infiniteLinks: this.trpc.procedure
-      .input(
-        z.object({
-          limit: z.number().min(1).max(20).nullish(),
-          cursor: z.number().nullish(),
-        }),
-      )
-      .query(async ({ input }) => {
-        const cursor = input.cursor ?? 0;
-        const limit = input.limit ?? 10;
-        const { data, total } = await this.links.find(cursor, limit);
-        const nextCursor = cursor + limit;
-        return {
-          links: data,
-          total: total,
-          nextCursor,
-        };
-      }),
-    linkFindById: this.trpc.procedure
-      .input(z.object({ id: z.number() }))
-      .query(async ({ input }) => {
-        const { id } = input;
-        const link = await this.links.findOne(id);
-        return {
-          link: link,
-        };
       }),
   });
 }

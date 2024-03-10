@@ -22,7 +22,7 @@ const Home = () => {
   // const links = useLinksFindAll();
   const link = useLinkFindById({ id: 1 });
   const utils = trpc.useUtils();
-  const infiniteLinks = trpc.infiniteLinks.useInfiniteQuery(
+  const infiniteLinks = trpc.hyperlinks.get.useInfiniteQuery(
     {
       limit: 5,
     },
@@ -57,7 +57,7 @@ const Home = () => {
       },
       onData(data) {
         console.log(data);
-        utils.linksFindAll.invalidate();
+        utils.hyperlinks.get.invalidate();
       },
     },
   );
@@ -70,7 +70,7 @@ const Home = () => {
       },
       onData(data) {
         console.log(data);
-        utils.linksFindAll.invalidate();
+        utils.hyperlinks.get.invalidate();
       },
     },
   );
