@@ -18,7 +18,29 @@ export class AuthService {
     'jwt.refreshSignOptions.expiresIn',
   );
 
-  async signIn(
+  async register(
+    username: string,
+    password: string,
+  ): Promise<{ access_token: string; refresh_token: string }> {
+    const existedUser = await this.usersService.findOneByUsername(username);
+    if (existedUser) {
+      throw new TRPCError({
+        code: 'BAD_REQUEST',
+        message: `User with username ${username} already exist.`,
+      });
+    }
+    const user = await this.usersService.create(username, password);
+    const payload = { sub: user.id, username: user.username };
+    return {
+      access_token: await this.jwtService.signAsync(payload),
+      refresh_token: await this.jwtService.signAsync(payload, {
+        secret: this.refreshSecret,
+        expiresIn: this.refreshExpiresIn,
+      }),
+    };
+  }
+
+  async login(
     username: string,
     pass: string,
   ): Promise<{ access_token: string; refresh_token: string }> {

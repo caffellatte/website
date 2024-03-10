@@ -5,12 +5,12 @@ import {
   type RouterOutputs,
 } from "@client/services/trpc";
 
-type LinkCreateOptions = ReactQueryOptions["linkCreate"];
+type LinkCreateOptions = ReactQueryOptions["hyperlinks"]["create"];
 
 export function useLinkCreate(options?: LinkCreateOptions) {
   const utils = trpc.useUtils();
 
-  return trpc.linkCreate.useMutation({
+  return trpc.hyperlinks.create.useMutation({
     ...options,
     onSuccess(data, variables, context) {
       // invalidate all queries on the link router

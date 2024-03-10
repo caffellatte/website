@@ -1,9 +1,9 @@
 import Cookies from "js-cookie";
 import { httpBatchLink } from "@trpc/client";
 import type { AppRouter } from "@server/trpc/trpc.router";
-import { createTRPCProxyClient } from "@trpc/react-query";
+import { createTRPCClient } from "@trpc/react-query";
 
-export const trcpProxyClient = createTRPCProxyClient<AppRouter>({
+export const trcpProxyClient = createTRPCClient<AppRouter>({
   links: [
     httpBatchLink({
       url: "http://localhost:4000/trpc",
@@ -14,13 +14,13 @@ export const trcpProxyClient = createTRPCProxyClient<AppRouter>({
 export async function handleTrpcUnauthError(
   res: Response,
   url: RequestInfo | URL,
-  options: any
+  options: any,
 ) {
   const { error } = await res.json();
   const refreshToken = Cookies.get("refresh_token");
   if (error.message === "jwt expired" && refreshToken) {
     try {
-      const refreshResponse = await trcpProxyClient.refresh.query({
+      const refreshResponse = await trcpProxyClient.auth.refresh.query({
         refresh_token: refreshToken,
       });
 

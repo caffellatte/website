@@ -5,12 +5,12 @@ import {
   type RouterOutputs,
 } from "@client/services/trpc";
 
-type RegisterOptions = ReactQueryOptions["register"];
+type RegisterOptions = ReactQueryOptions["auth"]["register"];
 
 export function useRegister(options?: RegisterOptions) {
   const utils = trpc.useUtils();
 
-  return trpc.register.useMutation({
+  return trpc.auth.register.useMutation({
     ...options,
     onSuccess(data, variables, context) {
       // invalidate all queries on the link router

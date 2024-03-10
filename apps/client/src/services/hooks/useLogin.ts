@@ -6,12 +6,12 @@ import {
 } from "@client/services/trpc";
 import Cookies from "js-cookie";
 
-type LoginOptions = ReactQueryOptions["login"];
+type LoginOptions = ReactQueryOptions["auth"]["login"];
 
 export function useLogin(options?: LoginOptions) {
   const utils = trpc.useUtils();
 
-  return trpc.login.useMutation({
+  return trpc.auth.login.useMutation({
     ...options,
     onSuccess(data, variables, context) {
       // invalidate all queries on the link router
