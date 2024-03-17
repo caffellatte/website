@@ -36,9 +36,7 @@ const Home = () => {
     const total = infiniteLinks.data?.pages.at(0)?.total;
     if (total) return total;
     return 0;
-  }, [infiniteLinks.data?.pages?.at(0)?.total]);
-
-  console.log(infiniteLinks.data);
+  }, [infiniteLinks.data?.pages]);
 
   useEffect(() => {
     const arrays = infiniteLinks.data?.pages.map((page) => page.links);
@@ -75,8 +73,6 @@ const Home = () => {
     },
   );
 
-  console.log(link.data?.link);
-
   const handleLinkCreate = () => {
     linkCreate.mutate({
       title: "Title",
@@ -111,7 +107,7 @@ const Home = () => {
         <div className="flex flex-col gap-2">
           {links && links.map(({ id }) => <li key={id}>{id}</li>)}
         </div>
-        {links?.length && totalLinks > links?.length && (
+        {links && links?.length !== 0 && totalLinks > links?.length && (
           <button
             onClick={() => {
               infiniteLinks.fetchNextPage();

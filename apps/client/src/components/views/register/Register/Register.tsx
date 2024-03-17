@@ -32,8 +32,8 @@ const Register = () => {
   }, [register.error]);
 
   useEffect(() => {
-    console.log("isLoading:", register.isLoading);
-  }, [register.isLoading]);
+    console.log("isPending:", register.isPending);
+  }, [register.isPending]);
 
   const onSubmit = async ({ username, password }: RegisterFormSchema) => {
     console.log(username, password);
@@ -51,9 +51,9 @@ const Register = () => {
   };
 
   return (
-    <section className="h-screen flex flex-col flex-grow items-center justify-center">
+    <section className="flex h-screen flex-grow flex-col items-center justify-center">
       <form
-        className="min-w-[320px] flex flex-col gap-4"
+        className="flex min-w-[320px] flex-col gap-4"
         onSubmit={handleSubmit(onSubmit)}
       >
         <div className="flex flex-col gap-2">
