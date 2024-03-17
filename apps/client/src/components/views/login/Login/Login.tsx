@@ -23,6 +23,8 @@ const Login = () => {
     formState: { errors },
   } = useForm<LoginFormSchema>({ resolver });
 
+  console.log(login);
+
   useEffect(() => {
     console.log("data:", login.data);
   }, [login.data]);
@@ -35,8 +37,8 @@ const Login = () => {
   }, [login.error, setError]);
 
   useEffect(() => {
-    console.log("isLoading:", login.isLoading);
-  }, [login.isLoading]);
+    console.log("isPending:", login.isPending);
+  }, [login.isPending]);
 
   const onSubmit = async ({ username, password }: LoginFormSchema) => {
     console.log(username, password);
@@ -53,9 +55,9 @@ const Login = () => {
   };
 
   return (
-    <section className="h-screen flex flex-col flex-grow items-center justify-center">
+    <section className="flex h-screen flex-grow flex-col items-center justify-center">
       <form
-        className="w-[320px] flex flex-col gap-4"
+        className="flex w-[320px] flex-col gap-4"
         onSubmit={handleSubmit(onSubmit)}
       >
         <div className="flex flex-col gap-2">
