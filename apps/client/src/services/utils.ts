@@ -16,7 +16,10 @@ export async function handleTrpcUnauthError(
   url: RequestInfo | URL,
   options: any,
 ) {
-  const { error } = await res.json();
+  const data = await res.json();
+  const error = data.error
+    ? data.error
+    : data[0].error; /* Todo: map data array */
   const refreshToken = Cookies.get("refresh_token");
   if (error.message === "jwt expired" && refreshToken) {
     try {
@@ -43,7 +46,7 @@ export async function handleTrpcUnauthError(
       Cookies.remove("refresh_token");
       return res;
     }
+  } else {
+    return await fetch(url, options);
   }
-
-  return res;
 }

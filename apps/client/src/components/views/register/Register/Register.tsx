@@ -29,7 +29,11 @@ const Register = () => {
 
   useEffect(() => {
     console.log("error:", register.error);
-  }, [register.error]);
+    setError("registerError", {
+      type: "custom",
+      message: register.error?.message,
+    });
+  }, [register.error, setError]);
 
   useEffect(() => {
     console.log("isPending:", register.isPending);
