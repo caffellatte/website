@@ -2,9 +2,10 @@ import { User } from '@server/users/user.entity';
 import {
   Column,
   Entity,
+  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
-  JoinColumn,
+  Relation,
   // OneToMany,
   Tree,
   TreeChildren,
@@ -37,5 +38,5 @@ export class Collection {
 
   @ManyToOne(() => User, (user) => user.collections)
   @JoinColumn({ name: 'user_id' })
-  user: User;
+  user: Relation<User>;
 }

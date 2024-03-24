@@ -1,5 +1,11 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { Collection } from '@server/collections/collection.entity';
+import {
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  Relation,
+} from 'typeorm';
 // import { Link } from '@server/links/link.entity';
 
 @Entity()
@@ -26,5 +32,5 @@ export class User {
   // links: Link[];
   //
   @OneToMany(() => Collection, (collection) => collection.user)
-  collections: Collection[];
+  collections: Relation<Collection[]>;
 }
