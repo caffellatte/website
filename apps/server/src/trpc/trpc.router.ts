@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import { Queue } from 'bull';
 import { EventEmitter } from 'events';
 import { TRPCError } from '@trpc/server';
 import { Injectable } from '@nestjs/common';
@@ -7,28 +6,36 @@ import { observable } from '@trpc/server/observable';
 import { TrpcService } from '@server/trpc/trpc.service';
 import { AuthService } from '@server/auth/auth.service';
 import { LinksService } from '@server/links/links.service';
-import { UsersService } from '@server/users/users.service';
-import { OnGlobalQueueCompleted, InjectQueue, Processor } from '@nestjs/bull';
+import {
+  QueueEventsListener,
+  QueueEventsHost,
+  OnQueueEvent,
+} from '@nestjs/bullmq';
 
-@Processor('links')
+@QueueEventsListener('links')
 @Injectable()
-export class TrpcRouter {
+export class TrpcRouter extends QueueEventsHost {
   ee = new EventEmitter();
 
   constructor(
     private readonly trpc: TrpcService,
     private readonly auth: AuthService,
     private readonly links: LinksService,
-    private readonly users: UsersService,
-    @InjectQueue('links') private readonly linksQueue: Queue,
-  ) {}
+  ) {
+    super();
+  }
 
-  @OnGlobalQueueCompleted()
-  async onGlobalCompleted(jobId: number, result: any) {
-    const job = await this.linksQueue.getJob(jobId);
-    if (job?.queue.name === 'links' && 'analyze' === job?.name) {
-      this.ee.emit('update', JSON.parse(result));
-    }
+  @OnQueueEvent('completed')
+  onCompleted({
+    jobId,
+    returnvalue,
+  }: {
+    jobId: string;
+    returnvalue: string;
+    prev?: string;
+  }) {
+    console.log('jobId: ', jobId);
+    this.ee.emit('update', returnvalue);
   }
 
   /**

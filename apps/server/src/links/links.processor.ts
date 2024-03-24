@@ -1,22 +1,25 @@
-import { Process, Processor } from '@nestjs/bull';
+import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Logger } from '@nestjs/common';
-import { Job } from 'bull';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { Link } from '@server/links/link.entity';
+import { Job } from 'bullmq';
+import { Repository } from 'typeorm';
 
 @Processor('links')
-export class LinksProcessor {
+export class LinksProcessor extends WorkerHost {
   constructor(
     @InjectRepository(Link)
     private linksRepository: Repository<Link>,
-  ) {}
+  ) {
+    super();
+  }
   private readonly logger = new Logger(LinksProcessor.name);
 
-  @Process('analyze')
-  async handleAnalyze(job: Job) {
+  // @Process('analyze')
+  async process(job: Job<any, any, string>, token?: string): Promise<any> {
     this.logger.debug('Start Analyze...');
     this.logger.debug(job.data);
+    this.logger.debug(token);
     const links = await this.linksRepository.find();
     this.logger.debug(links.length);
     this.logger.debug('End Analyze');

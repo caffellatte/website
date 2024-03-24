@@ -1,6 +1,7 @@
+import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
 import { FastifyAdapter } from '@bull-board/fastify';
 import { BullBoardModule } from '@bull-board/nestjs';
-import { BullModule } from '@nestjs/bull';
+import { BullModule } from '@nestjs/bullmq';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -33,7 +34,7 @@ import { CollectionsModule } from './collections/collections.module';
       autoLoadEntities: true,
     }),
     BullModule.forRoot({
-      redis: {
+      connection: {
         host: 'localhost',
         password: 'password',
         port: 6379,
@@ -42,6 +43,10 @@ import { CollectionsModule } from './collections/collections.module';
     BullBoardModule.forRoot({
       route: '/queues',
       adapter: FastifyAdapter,
+    }),
+    BullBoardModule.forFeature({
+      name: 'links',
+      adapter: BullMQAdapter,
     }),
     CollectionsModule,
   ],
