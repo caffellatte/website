@@ -8,7 +8,7 @@ import { Link } from '@server/links/link.entity';
 import { User } from '@server/users/user.entity';
 import { UsersModule } from '@server/users/users.module';
 import { UsersService } from '@server/users/users.service';
-import { BullModule } from '@nestjs/bull';
+import { BullModule } from '@nestjs/bullmq';
 import { AuthModule } from '@server/auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 
