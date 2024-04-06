@@ -11,6 +11,10 @@ import { useEffect, useState, useMemo } from "react";
 // import { useLinksFindAll } from "@client/services/hooks/useLinksFindAll";
 import { useLinksAnalyze } from "@client/services/hooks/useLinksAnalyze";
 import { trpc } from "@client/services/trpc";
+import { Button, buttonVariants } from "@client/components/ui/base/Button";
+import { Input } from "@client/components/ui/base/Input";
+import { cn } from "@client/lib/utils";
+import { size } from "@client/app/icon";
 
 const Home = () => {
   const [links, setLinks] = useState<
@@ -88,19 +92,28 @@ const Home = () => {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-12">
+    <main className="container flex min-h-screen flex-col items-center justify-between">
+      <header className="flex items-center justify-between py-5 w-full">
+        <Typography variant="h5">website</Typography>
+        <div className="flex items-center justify-between gap-6">
+          <Link
+            className={cn(buttonVariants({ size: "none", variant: "link" }))}
+            href="/login"
+          >
+            login
+          </Link>
+          <Link
+            className={cn(buttonVariants({ size: "none", variant: "link" }))}
+            href="/register"
+          >
+            register
+          </Link>
+        </div>
+      </header>
       <div className="flex flex-col gap-3 text-center">
-        <Typography variant="h4">Mikhail Lutsenko</Typography>
-        <Typography variant="h6">Full-Stack Web Developer</Typography>
-        <Link
-          href="https://github.com/caffellatte"
-          className={typographyVariants({ variant: "link" })}
-        >
-          github.com/caffellatte
-        </Link>
-        <button onClick={handleLinkCreate} disabled={linkCreate.isPending}>
+        <Button onClick={handleLinkCreate} disabled={linkCreate.isPending}>
           Create link
-        </button>
+        </Button>
         <button onClick={handleLinksAnalyze} disabled={linkCreate.isPending}>
           Analyze links
         </button>
@@ -118,6 +131,14 @@ const Home = () => {
           </button>
         )}
       </div>
+      <footer className="py-5">
+        <Link
+          href="https://github.com/caffellatte/website"
+          className={typographyVariants({ variant: "link" })}
+        >
+          github.com/caffellatte/website
+        </Link>
+      </footer>
     </main>
   );
 };
