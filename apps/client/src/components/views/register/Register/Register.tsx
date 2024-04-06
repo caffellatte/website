@@ -55,7 +55,8 @@ const Register = () => {
   };
 
   return (
-    <section className="flex h-screen flex-grow flex-col items-center justify-center">
+    <main className="flex flex-col items-center gap-6">
+      <Typography variant="h5">Register</Typography>
       <form
         className="flex min-w-[320px] flex-col gap-4"
         onSubmit={handleSubmit(onSubmit)}
@@ -115,7 +116,7 @@ const Register = () => {
           </Typography>
         )}
       </form>
-    </section>
+    </main>
   );
 };
 

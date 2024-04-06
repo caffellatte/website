@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import SplashScreen from "@client/components/ui/common/SplashScreen";
+import Header from "@client/components/ui/common/Header";
+import Footer from "@client/components/ui/common/Footer";
 
 export default function MainLayout({
   children, // will be a page or nested layout
@@ -22,7 +24,11 @@ export default function MainLayout({
       {isLoading && isHome ? (
         <SplashScreen finishLoading={() => setIsLoading(false)} />
       ) : (
-        children
+        <div className="container flex min-h-screen flex-col items-center justify-between">
+          <Header />
+          {children}
+          <Footer />
+        </div>
       )}
     </>
   );

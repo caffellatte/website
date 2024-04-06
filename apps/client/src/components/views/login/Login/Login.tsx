@@ -55,7 +55,8 @@ const Login = () => {
   };
 
   return (
-    <section className="flex h-screen flex-grow flex-col items-center justify-center">
+    <main className="flex flex-col items-center gap-6">
+      <Typography variant="h5">Login</Typography>
       <form
         className="flex w-[320px] flex-col gap-4"
         onSubmit={handleSubmit(onSubmit)}
@@ -115,7 +116,7 @@ const Login = () => {
           </Typography>
         )}
       </form>
-    </section>
+    </main>
   );
 };
 
