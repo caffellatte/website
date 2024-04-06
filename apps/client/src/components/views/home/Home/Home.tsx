@@ -1,21 +1,17 @@
 "use client";
 
-import { typographyVariants } from "@client/components/ui/base/Typography";
-import { useLinkCreate } from "@client/services/hooks/useLinkCreate";
 import { useLinkFindById } from "@client/services/hooks/useLinkFindById";
-import Link from "next/link";
 import { useEffect, useState, useMemo } from "react";
 // import { useLinksFindAll } from "@client/services/hooks/useLinksFindAll";
 import { useLinksAnalyze } from "@client/services/hooks/useLinksAnalyze";
 import { trpc } from "@client/services/trpc";
-import { Button } from "@client/components/ui/base/Button";
+import LinkCreate from "@client/components/ui/template/LinkCreate/LinkCreate";
 
 const Home = () => {
   const [links, setLinks] = useState<
     | { title: string; description: string; url: string; id: number }[]
     | undefined
   >();
-  const linkCreate = useLinkCreate();
   const linkAnalyze = useLinksAnalyze();
   // const links = useLinksFindAll();
   const link = useLinkFindById({ id: 1 });
@@ -71,14 +67,6 @@ const Home = () => {
     },
   );
 
-  const handleLinkCreate = () => {
-    linkCreate.mutate({
-      title: "Title",
-      description: "Description",
-      url: "URL",
-    });
-  };
-
   const handleLinksAnalyze = () => {
     linkAnalyze.mutate({
       type: "reports",
@@ -87,10 +75,8 @@ const Home = () => {
 
   return (
     <main className="flex flex-col gap-3 text-center">
-      <Button onClick={handleLinkCreate} disabled={linkCreate.isPending}>
-        Create link
-      </Button>
-      <button onClick={handleLinksAnalyze} disabled={linkCreate.isPending}>
+      <LinkCreate />
+      <button onClick={handleLinksAnalyze} disabled={linkAnalyze.isPending}>
         Analyze links
       </button>
       <div className="flex flex-col gap-2">
