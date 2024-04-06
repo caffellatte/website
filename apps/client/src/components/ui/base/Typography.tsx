@@ -24,7 +24,7 @@ const typographyStyleVariants = {
   h3: "text-4xl",
   h4: "text-3xl",
   h5: "text-2xl",
-  h6: "text-1xl",
+  h6: "text-xl",
   subheading1: "text-1xl font-bold",
   subheading2: "text-1xl font-semibold",
   body1: "text-base",
