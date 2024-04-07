@@ -8,11 +8,13 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRegister } from "@client/services/hooks/useRegister";
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 const resolver = zodResolver(registerSchema);
 
 const Register = () => {
   const register = useRegister();
+  const router = useRouter();
 
   const {
     reset,
@@ -25,7 +27,10 @@ const Register = () => {
 
   useEffect(() => {
     console.log("data:", register.data);
-  }, [register.data]);
+    if (register.data?.access_token && register.data?.refresh_token) {
+      router.push("/");
+    }
+  }, [register.data, router]);
 
   useEffect(() => {
     console.log("error:", register.error);
