@@ -49,8 +49,8 @@ export class LinksService {
     return this.linksRepository.save(entity);
   }
 
-  async analyze(type: string): Promise<{ status: string }> {
-    await this.linksQueue.add('analyze', { type });
+  async analyze(id: number, type: string): Promise<{ status: string }> {
+    await this.linksQueue.add('analyze', { id, type });
     // TODO: return JobID
     return { status: 'start' };
   }

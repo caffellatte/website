@@ -2,11 +2,73 @@ import { useEffect, useState, useMemo } from "react";
 import { useLinksAnalyze } from "@client/services/hooks/useLinksAnalyze";
 import { trpc } from "@client/services/trpc";
 
+import {
+  ColumnDef,
+  createColumnHelper,
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+
+type Link = {
+  id: number;
+  title: string;
+  description: string;
+  url: string;
+};
+
 const LinksTable = () => {
-  const [links, setLinks] = useState<
-    | { title: string; description: string; url: string; id: number }[]
-    | undefined
-  >();
+  const columnHelper = createColumnHelper<Link>();
+
+  const columns: ColumnDef<Link, any>[] = [
+    columnHelper.accessor((row) => row.id, {
+      id: "id",
+      header: () => "ID",
+      cell: (info) => info.getValue(),
+      footer: (info) => info.column.id,
+    }),
+    columnHelper.accessor((row) => row.title, {
+      id: "title",
+      cell: (info) => <i>{info.getValue()}</i>,
+      header: () => "Title",
+      footer: (info) => info.column.id,
+    }),
+    columnHelper.accessor((row) => row.description, {
+      id: "description",
+      header: () => "Description",
+      cell: (info) => info.renderValue(),
+      footer: (info) => info.column.id,
+    }),
+    columnHelper.accessor((row) => row.url, {
+      id: "url",
+      header: () => <span>URL</span>,
+      cell: (info) => info.renderValue(),
+      footer: (info) => info.column.id,
+    }),
+    columnHelper.accessor((row) => row.id, {
+      id: "analyze",
+      header: () => "Analyze",
+      cell: (info) => {
+        return (
+          <button
+            onClick={() => handleLinksAnalyze(info.getValue())}
+            disabled={linkAnalyze.isPending}
+          >
+            Analyze links
+          </button>
+        );
+      },
+      footer: (info) => info.column.id,
+    }),
+  ];
+
+  const [links, setLinks] = useState<Link[]>([]);
+
+  const table = useReactTable({
+    data: links,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+  });
 
   const linkAnalyze = useLinksAnalyze();
   // const links = useLinksFindAll();
@@ -33,7 +95,9 @@ const LinksTable = () => {
       (accumulator, links) => [...accumulator, ...links],
       [],
     );
-    setLinks(result);
+    if (result) {
+      setLinks(result);
+    }
   }, [infiniteLinks.data?.pages]);
 
   trpc.update.useSubscription(
@@ -62,28 +126,60 @@ const LinksTable = () => {
     },
   );
 
-  const handleLinksAnalyze = () => {
+  const handleLinksAnalyze = (id: number) => {
     linkAnalyze.mutate({
+      id: id,
       type: "reports",
     });
   };
 
   return (
     <div>
-      <div className="flex flex-col gap-2">
-        {links &&
-          links.map(({ id }) => (
-            <li className="flex items-center" key={id}>
-              {id}{" "}
-              <button
-                onClick={handleLinksAnalyze}
-                disabled={linkAnalyze.isPending}
-              >
-                Analyze links
-              </button>
-            </li>
+      <table className="w-full border border-black">
+        <thead className="border-b border-gray-400">
+          {table.getHeaderGroups().map((headerGroup) => (
+            <tr key={headerGroup.id}>
+              {headerGroup.headers.map((header) => (
+                <th className="p-2" key={header.id}>
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext(),
+                      )}
+                </th>
+              ))}
+            </tr>
           ))}
-      </div>
+        </thead>
+        <tbody>
+          {table.getRowModel().rows.map((row) => (
+            <tr key={row.id} className="border-b border-gray-200">
+              {row.getVisibleCells().map((cell) => (
+                <td key={cell.id} className="text-center">
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+        <tfoot>
+          {table.getFooterGroups().map((footerGroup) => (
+            <tr key={footerGroup.id}>
+              {footerGroup.headers.map((header) => (
+                <th key={header.id}>
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                        header.column.columnDef.footer,
+                        header.getContext(),
+                      )}
+                </th>
+              ))}
+            </tr>
+          ))}
+        </tfoot>
+      </table>
       {links && links?.length !== 0 && totalLinks > links?.length && (
         <button
           onClick={() => {

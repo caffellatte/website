@@ -87,10 +87,10 @@ export class TrpcRouter extends QueueEventsHost {
    */
   hyperlinksRouter = this.trpc.router({
     analyze: this.trpc.procedure
-      .input(z.object({ type: z.string() }))
+      .input(z.object({ id: z.number(), type: z.string() }))
       .mutation(async ({ input }) => {
-        const { type } = input;
-        return await this.links.analyze(type);
+        const { id, type } = input;
+        return await this.links.analyze(id, type);
       }),
     create: this.protectedProcedure
       .input(
