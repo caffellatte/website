@@ -1,16 +1,17 @@
-import { z } from 'zod';
-import { EventEmitter } from 'events';
-import { TRPCError } from '@trpc/server';
+import {
+  OnQueueEvent,
+  QueueEventsHost,
+  QueueEventsListener,
+} from '@nestjs/bullmq';
 import { Injectable } from '@nestjs/common';
-import { observable } from '@trpc/server/observable';
-import { TrpcService } from '@server/trpc/trpc.service';
 import { AuthService } from '@server/auth/auth.service';
 import { LinksService } from '@server/links/links.service';
-import {
-  QueueEventsListener,
-  QueueEventsHost,
-  OnQueueEvent,
-} from '@nestjs/bullmq';
+import { TrpcService } from '@server/trpc/trpc.service';
+import { UsersService } from '@server/users/users.service';
+import { TRPCError } from '@trpc/server';
+import { observable } from '@trpc/server/observable';
+import { EventEmitter } from 'events';
+import { z } from 'zod';
 
 @QueueEventsListener('links')
 @Injectable()
@@ -21,6 +22,7 @@ export class TrpcRouter extends QueueEventsHost {
     private readonly trpc: TrpcService,
     private readonly auth: AuthService,
     private readonly links: LinksService,
+    private readonly users: UsersService,
   ) {
     super();
   }
@@ -79,6 +81,23 @@ export class TrpcRouter extends QueueEventsHost {
         const { refresh_token } = input;
         const payload = await this.auth.refresh(refresh_token);
         return payload;
+      }),
+  });
+
+  /**
+   * Users Router
+   */
+  usersRouter = this.trpc.router({
+    me: this.protectedProcedure
+      .input(z.object({}).nullish())
+      .query(async ({ ctx }) => {
+        console.log(ctx.user.sub);
+        if (ctx.user.sub) {
+          const user = await this.users.findOneById(Number(ctx.user.sub));
+          if (user) {
+            return { id: user.id, username: user.username };
+          }
+        }
       }),
   });
 
@@ -148,8 +167,9 @@ export class TrpcRouter extends QueueEventsHost {
    * App Router
    */
   appRouter = this.trpc.router({
-    hyperlinks: this.hyperlinksRouter,
     auth: this.authRouter,
+    hyperlinks: this.hyperlinksRouter,
+    users: this.usersRouter,
     update: this.trpc.procedure
       .input(z.object({ type: z.string() }))
       .subscription(({ input }) => {
