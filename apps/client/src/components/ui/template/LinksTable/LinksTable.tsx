@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
 import { useLinksAnalyze } from "@client/services/hooks/useLinksAnalyze";
 import { trpc } from "@client/services/trpc";
+import { useAutoAnimate } from "@formkit/auto-animate/react";
 
 import {
   ColumnDef,
@@ -18,6 +19,7 @@ type Link = {
 };
 
 const LinksTable = () => {
+  const [parent] = useAutoAnimate();
   const columnHelper = createColumnHelper<Link>();
 
   const columns: ColumnDef<Link, any>[] = [
@@ -152,7 +154,7 @@ const LinksTable = () => {
             </tr>
           ))}
         </thead>
-        <tbody>
+        <tbody ref={parent}>
           {table.getRowModel().rows.map((row) => (
             <tr key={row.id} className="border-b border-gray-200">
               {row.getVisibleCells().map((cell) => (
