@@ -119,12 +119,21 @@ export class TrpcRouter extends QueueEventsHost {
           url: z.string(),
         }),
       )
-      .mutation(async ({ input }) => {
-        const { title, description, url } = input;
-        console.log('trpc.router.ts:', title, description, url);
-        const links = await this.links.create(title, description, url);
-        this.ee.emit('update', { type: 'links' });
-        return links;
+      .mutation(async ({ input, ctx }) => {
+        if (ctx.user.sub) {
+          const { title, description, url } = input;
+          console.log('trpc.router.ts:', title, description, url);
+          const link = await this.links.create(
+            Number(ctx.user.sub),
+            title,
+            description,
+            url,
+          );
+          this.ee.emit('update', { type: 'links' });
+          return link;
+        } else {
+          throw new TRPCError({ code: 'NOT_FOUND' });
+        }
       }),
     findAll: this.trpc.procedure
       .input(z.object({}).optional())
@@ -134,23 +143,31 @@ export class TrpcRouter extends QueueEventsHost {
           links: links,
         };
       }),
-    get: this.trpc.procedure
+    get: this.protectedProcedure
       .input(
         z.object({
           limit: z.number().min(1).max(20).nullish(),
           cursor: z.number().nullish(),
         }),
       )
-      .query(async ({ input }) => {
-        const cursor = input.cursor ?? 0;
-        const limit = input.limit ?? 10;
-        const { data, total } = await this.links.get(cursor, limit);
-        const nextCursor = cursor + limit;
-        return {
-          links: data,
-          total: total,
-          nextCursor,
-        };
+      .query(async ({ input, ctx }) => {
+        if (ctx.user.sub) {
+          const cursor = input.cursor ?? 0;
+          const limit = input.limit ?? 10;
+          const { data, total } = await this.links.get(
+            Number(ctx.user.sub),
+            cursor,
+            limit,
+          );
+          const nextCursor = cursor + limit;
+          return {
+            links: data,
+            total: total,
+            nextCursor,
+          };
+        } else {
+          throw new TRPCError({ code: 'NOT_FOUND' });
+        }
       }),
     findById: this.trpc.procedure
       .input(z.object({ id: z.number() }))
