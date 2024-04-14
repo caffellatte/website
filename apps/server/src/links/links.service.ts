@@ -4,12 +4,16 @@ import { Repository } from 'typeorm';
 import { Link } from '@server/links/link.entity';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
+import { User } from '@server/users/user.entity';
+import { TRPCError } from '@trpc/server';
 
 @Injectable()
 export class LinksService {
   constructor(
     @InjectRepository(Link)
     private linksRepository: Repository<Link>,
+    @InjectRepository(User)
+    private usersRepository: Repository<User>,
     @InjectQueue('links') private readonly linksQueue: Queue,
   ) {}
 
@@ -18,14 +22,18 @@ export class LinksService {
   }
 
   async get(
+    id: number,
     cursor: number,
     limit: number,
   ): Promise<{ data: Link[]; total: number }> {
-    const [result, total] = await this.linksRepository.findAndCount({
-      order: { id: 'DESC' },
-      take: limit,
-      skip: cursor,
-    });
+    const [result, total] = await this.linksRepository
+      .createQueryBuilder('link')
+      .where('user_id = :user_id', { user_id: id })
+      .select()
+      .orderBy('id', 'DESC')
+      .take(limit)
+      .skip(cursor)
+      .getManyAndCount();
     return {
       data: result,
       total: total,
@@ -40,13 +48,24 @@ export class LinksService {
     await this.linksRepository.delete(id);
   }
 
-  async create(title: string, description: string, url: string): Promise<Link> {
-    const entity = this.linksRepository.create({
-      title: title,
-      description: description,
-      url: url,
-    });
-    return this.linksRepository.save(entity);
+  async create(
+    user_id: number,
+    title: string,
+    description: string,
+    url: string,
+  ): Promise<Link> {
+    const user = await this.usersRepository.findOneBy({ id: user_id });
+    if (user) {
+      const entity = this.linksRepository.create({
+        title: title,
+        description: description,
+        url: url,
+      });
+      entity.user = user;
+      return this.linksRepository.save(entity);
+    } else {
+      throw new TRPCError({ code: 'NOT_FOUND' });
+    }
   }
 
   async analyze(id: number, type: string): Promise<{ status: string }> {

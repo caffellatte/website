@@ -7,6 +7,7 @@ import { BullModule } from '@nestjs/bullmq';
 import { BullBoardModule } from '@bull-board/nestjs';
 import { BullAdapter } from '@bull-board/api/bullAdapter';
 import { TrpcService } from '@server/trpc/trpc.service';
+import { User } from '@server/users/user.entity';
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import { TrpcService } from '@server/trpc/trpc.service';
       name: 'links',
       adapter: BullAdapter,
     }),
-    TypeOrmModule.forFeature([Link]),
+    TypeOrmModule.forFeature([Link, User]),
   ],
   providers: [LinksService, LinksProcessor, TrpcService],
   exports: [BullModule],

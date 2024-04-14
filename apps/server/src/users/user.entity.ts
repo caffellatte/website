@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
   Relation,
 } from 'typeorm';
-// import { Link } from '@server/links/link.entity';
+import { Link } from '@server/links/link.entity';
 
 @Entity()
 export class User {
@@ -28,9 +28,9 @@ export class User {
   // @Column({ default: true })
   // isActive: boolean;
 
-  // @OneToMany(() => Link, (link) => link.user)
-  // links: Link[];
-  //
+  @OneToMany(() => Link, (link) => link.user)
+  links: Relation<Link[]>;
+
   @OneToMany(() => Collection, (collection) => collection.user)
   collections: Relation<Collection[]>;
 }

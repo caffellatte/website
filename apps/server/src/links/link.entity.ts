@@ -2,9 +2,11 @@ import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
-  //  ManyToOne
+  ManyToOne,
+  JoinColumn,
+  Relation,
 } from 'typeorm';
-// import { User } from '@server/users/user.entity';
+import { User } from '@server/users/user.entity';
 
 @Entity()
 export class Link {
@@ -20,6 +22,7 @@ export class Link {
   @Column()
   url: string;
 
-  // @ManyToOne(() => User, (user) => user.links)
-  // user: User;
+  @ManyToOne(() => User, (user) => user.links)
+  @JoinColumn({ name: 'user_id' })
+  user: Relation<User>;
 }
