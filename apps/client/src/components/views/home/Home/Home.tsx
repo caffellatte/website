@@ -1,7 +1,7 @@
 "use client";
 
-import LinkCreate from "@client/components/ui/template/LinkCreate/LinkCreate";
-import LinksTable from "@client/components/ui/template/LinksTable";
+import LinkCreate from "@client/components/template/LinkCreate";
+import LinksTable from "@client/components/template/LinksTable";
 // import { useLinkFindById } from "@client/services/hooks/useLinkFindById";
 
 const Home = () => {

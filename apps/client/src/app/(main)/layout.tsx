@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
-import SplashScreen from "@client/components/ui/common/SplashScreen";
-import Header from "@client/components/ui/common/Header";
-import Footer from "@client/components/ui/common/Footer";
+import SplashScreen from "@client/components/common/SplashScreen";
+import Header from "@client/components/common/Header";
+import Footer from "@client/components/common/Footer";
 import { useUsersMe } from "@client/services/hooks/useUsersMe";
 import Cookies from "js-cookie";
 import { useSetAtom } from "jotai";
