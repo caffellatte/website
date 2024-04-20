@@ -8,6 +8,13 @@ import { useAtom } from "jotai";
 import { userAtom, userAtomInitial } from "@client/services/atoms";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@client/components/ui/dropdown-menu";
 
 const Header = () => {
   const router = useRouter();
@@ -25,15 +32,14 @@ const Header = () => {
         website
       </Link>
       {user.username ? (
-        <div className="flex items-center gap-6">
-          <Link
-            className={cn(buttonVariants({ size: "none", variant: "link" }))}
-            href="/profile"
-          >
-            {user.username}
-          </Link>
-          <Button onClick={logout}>Logout</Button>
-        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger>{user.username}</DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuItem>Profile</DropdownMenuItem>
+            <DropdownMenuItem onClick={logout}>Logout</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       ) : (
         <div className="flex items-center gap-6">
           <Link

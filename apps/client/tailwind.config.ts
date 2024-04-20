@@ -9,23 +9,19 @@ const config = {
       center: true,
       padding: {
         DEFAULT: "1rem",
-        "2xl": "4rem",
+        "2xl": "2rem",
       },
       screens: {
         "2xl": "1400px",
       },
     },
     extend: {
-      screens: {
-        "2xl": "1400px",
-      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
-        error: "hsl(var(--error))",
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
@@ -54,6 +50,11 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+      },
+      borderRadius: {
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
       },
       keyframes: {
         "accordion-down": {
