@@ -9,12 +9,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useLogin } from "@client/services/hooks/useLogin";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useAutoAnimate } from "@formkit/auto-animate/react";
 
 const resolver = zodResolver(loginSchema);
 
 const Login = () => {
   const login = useLogin();
   const router = useRouter();
+  const [parent] = useAutoAnimate();
 
   const {
     reset,
@@ -65,6 +67,7 @@ const Login = () => {
       <form
         className="flex w-[320px] flex-col gap-4"
         onSubmit={handleSubmit(onSubmit)}
+        ref={parent}
       >
         <div className="flex flex-col gap-2">
           <Controller
