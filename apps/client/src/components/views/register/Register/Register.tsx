@@ -9,12 +9,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRegister } from "@client/services/hooks/useRegister";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useAutoAnimate } from "@formkit/auto-animate/react";
 
 const resolver = zodResolver(registerSchema);
 
 const Register = () => {
   const register = useRegister();
   const router = useRouter();
+  const [parent] = useAutoAnimate();
 
   const {
     reset,
@@ -65,6 +67,7 @@ const Register = () => {
       <form
         className="flex min-w-[320px] flex-col gap-4"
         onSubmit={handleSubmit(onSubmit)}
+        ref={parent}
       >
         <div className="flex flex-col gap-2">
           <Controller
