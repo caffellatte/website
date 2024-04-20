@@ -10,6 +10,9 @@ import { createWSClient, wsLink, splitLink } from "@trpc/client";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experimental";
+// -
+
+import { Provider } from "jotai/react";
 
 const wsClient = createWSClient({
   url: `ws://localhost:4000/trpc`,
@@ -25,7 +28,7 @@ function Providers({ children }: React.PropsWithChildren) {
       //     // refetchOnWindowFocus: false,
       //   },
       // },
-    })
+    }),
   );
   const [trpcClient] = useState(() =>
     trpc.createClient({
@@ -63,13 +66,15 @@ function Providers({ children }: React.PropsWithChildren) {
           }),
         }),
       ],
-    })
+    }),
   );
 
   return (
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
-        <ReactQueryStreamedHydration>{children}</ReactQueryStreamedHydration>
+        <ReactQueryStreamedHydration>
+          <Provider>{children}</Provider>
+        </ReactQueryStreamedHydration>
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </trpc.Provider>

@@ -52,6 +52,9 @@ importers:
       clsx:
         specifier: ^2.1.0
         version: 2.1.0
+      jotai:
+        specifier: ^2.8.0
+        version: 2.8.0(@types/react@18.2.46)(react@18.2.0)
       js-cookie:
         specifier: ^3.0.5
         version: 3.0.5
@@ -121,7 +124,7 @@ importers:
         version: 5.14.0
       '@bull-board/nestjs':
         specifier: ^5.14.0
-        version: 5.14.0(@bull-board/api@5.14.0)(@bull-board/express@5.15.2)(@nestjs/common@10.3.0)(@nestjs/core@10.3.0)(reflect-metadata@0.1.14)(rxjs@7.8.1)
+        version: 5.14.0(@bull-board/api@5.14.0)(@bull-board/express@5.16.0)(@nestjs/common@10.3.0)(@nestjs/core@10.3.0)(reflect-metadata@0.1.14)(rxjs@7.8.1)
       '@fastify/websocket':
         specifier: ^8.3.1
         version: 8.3.1
@@ -702,22 +705,22 @@ packages:
       redis-info: 3.1.0
     dev: false
 
-  /@bull-board/api@5.15.2(@bull-board/ui@5.15.2):
-    resolution: {integrity: sha512-HOqh5/Z0W5GR0WHVS/G83DTn8JwDn0NZs2H5u0bMFnvEmKZexysdnZyeox8Y31A6azRO/tqK3o/LrT1Hhtaxtw==}
+  /@bull-board/api@5.16.0(@bull-board/ui@5.16.0):
+    resolution: {integrity: sha512-JnPi2M11At/4lxDP267k20AqUBZdVv+82nNMcO80dPJAEKpzbvhLqAl4H3nDSEowmzgzVVlD+/eFOMjg07h9Zg==}
     peerDependencies:
-      '@bull-board/ui': 5.15.2
+      '@bull-board/ui': 5.16.0
     dependencies:
-      '@bull-board/ui': 5.15.2
+      '@bull-board/ui': 5.16.0
       redis-info: 3.1.0
     dev: false
 
-  /@bull-board/express@5.15.2:
-    resolution: {integrity: sha512-ZZPe9M/jejC4AXzNsbf6SsCdKWZzXnpSPeQ+rb6yFXiQq3GpvMI9BZkasGb3k3BNETUZeK+ZlOem7ES0yMJ9bg==}
+  /@bull-board/express@5.16.0:
+    resolution: {integrity: sha512-UNuJcLvkAI+KdHHlx6U4+0JWr1PrVrlJBFaAPckd0vjoLZT1KRjNNyTYEyOUi84Zwa0RYkHS4mOKDkZRYT8aww==}
     dependencies:
-      '@bull-board/api': 5.15.2(@bull-board/ui@5.15.2)
-      '@bull-board/ui': 5.15.2
-      ejs: 3.1.9
-      express: 4.19.1
+      '@bull-board/api': 5.16.0(@bull-board/ui@5.16.0)
+      '@bull-board/ui': 5.16.0
+      ejs: 3.1.10
+      express: 4.19.2
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -732,7 +735,7 @@ packages:
       ejs: 3.1.9
     dev: false
 
-  /@bull-board/nestjs@5.14.0(@bull-board/api@5.14.0)(@bull-board/express@5.15.2)(@nestjs/common@10.3.0)(@nestjs/core@10.3.0)(reflect-metadata@0.1.14)(rxjs@7.8.1):
+  /@bull-board/nestjs@5.14.0(@bull-board/api@5.14.0)(@bull-board/express@5.16.0)(@nestjs/common@10.3.0)(@nestjs/core@10.3.0)(reflect-metadata@0.1.14)(rxjs@7.8.1):
     resolution: {integrity: sha512-7Nb8EqaUQyUsxXweeTM/hgvWCvlJDsnpSr/5pB6KIzY2r2GAHzViXRS9YXRkcKt27cMcj3BFB00AkgBBOPEDiA==}
     peerDependencies:
       '@bull-board/api': ^5.14.0
@@ -743,7 +746,7 @@ packages:
       rxjs: ^7.8.1
     dependencies:
       '@bull-board/api': 5.14.0(@bull-board/ui@5.14.0)
-      '@bull-board/express': 5.15.2
+      '@bull-board/express': 5.16.0
       '@nestjs/bull-shared': 10.0.1(@nestjs/common@10.3.0)(@nestjs/core@10.3.0)
       '@nestjs/common': 10.3.0(reflect-metadata@0.1.14)(rxjs@7.8.1)
       '@nestjs/core': 10.3.0(@nestjs/common@10.3.0)(@nestjs/platform-express@10.3.0)(reflect-metadata@0.1.14)(rxjs@7.8.1)
@@ -757,10 +760,10 @@ packages:
       '@bull-board/api': 5.14.0(@bull-board/ui@5.14.0)
     dev: false
 
-  /@bull-board/ui@5.15.2:
-    resolution: {integrity: sha512-OlDCAaBOjdR7ke3vGkm/vEwC8Cwrt/r9ivc8jL+hQbgDluauKl/o9NSPp3BgC2Fo0MRszAxTgSitR0pGLRhAwg==}
+  /@bull-board/ui@5.16.0:
+    resolution: {integrity: sha512-XJoHVKUDWCjOb0kMTKs1wTqn5p9mvFUFurTVNcbhPuqkIPoPJLuKhE8a7FvpTIK+HA5NhFRllaRK3K9/Y8JzIA==}
     dependencies:
-      '@bull-board/api': 5.15.2(@bull-board/ui@5.15.2)
+      '@bull-board/api': 5.16.0(@bull-board/ui@5.16.0)
     dev: false
 
   /@colors/colors@1.5.0:
@@ -3352,7 +3355,7 @@ packages:
     dependencies:
       cron-parser: 4.9.0
       get-port: 5.1.1
-      ioredis: 5.3.2
+      ioredis: 5.4.1
       lodash: 4.17.21
       msgpackr: 1.10.1
       semver: 7.6.0
@@ -4041,6 +4044,14 @@ packages:
   /ee-first@1.1.1:
     resolution: {integrity: sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==}
 
+  /ejs@3.1.10:
+    resolution: {integrity: sha512-UeJmFfOrAQS8OJWPZ4qtgHyWExa088/MtK5UEyoJGFH67cDEXkZSviOiKRCZ4Xij0zxI3JECgYs3oKx+AizQBA==}
+    engines: {node: '>=0.10.0'}
+    hasBin: true
+    dependencies:
+      jake: 10.8.7
+    dev: false
+
   /ejs@3.1.9:
     resolution: {integrity: sha512-rC+QVNMJWv+MtPgkt0y+0rVEIdbtxVADApW9JXrUVlzHetgcyczP/E7DJmWJ4fJCZF2cPcBk0laWO9ZHMG3DmQ==}
     engines: {node: '>=0.10.0'}
@@ -4178,6 +4189,10 @@ packages:
 
   /es-module-lexer@1.4.2:
     resolution: {integrity: sha512-7nOqkomXZEaxUDJw21XZNtRk739QvrPSoZoRtbsEfcii00vdzZUh6zh1CQwHhrib8MdEtJfv5rJiGeb4KuV/vw==}
+    dev: true
+
+  /es-module-lexer@1.5.0:
+    resolution: {integrity: sha512-pqrTKmwEIgafsYZAGw9kszYzmagcE/n4dbgwGWLEXg7J4QFJVQRBld8j3Q3GNez79jzxZshq0bcT962QHOghjw==}
     dev: true
 
   /es-set-tostringtag@2.0.2:
@@ -4657,8 +4672,8 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
-  /express@4.19.1:
-    resolution: {integrity: sha512-K4w1/Bp7y8iSiVObmCrtq8Cs79XjJc/RU2YYkZQ7wpUu5ZyZ7MtPHkqoMz4pf+mgXfNvo2qft8D9OnrH2ABk9w==}
+  /express@4.19.2:
+    resolution: {integrity: sha512-5T6nhjsT+EOMzuck8JjBHARTHfMht0POzlA60WV2pMD3gyXw2LZnZ+ueGdNxG+0calOJcWKbpFcuzLZ91YWq9Q==}
     engines: {node: '>= 0.10.0'}
     dependencies:
       accepts: 1.3.8
@@ -5500,6 +5515,23 @@ packages:
       - supports-color
     dev: false
 
+  /ioredis@5.4.1:
+    resolution: {integrity: sha512-2YZsvl7jopIa1gaePkeMtd9rAcSjOOjPtpcLlOeusyO+XH2SK5ZcT+UCrElPP+WVIInh2TzeI4XW9ENaSLVVHA==}
+    engines: {node: '>=12.22.0'}
+    dependencies:
+      '@ioredis/commands': 1.2.0
+      cluster-key-slot: 1.1.2
+      debug: 4.3.4
+      denque: 2.1.0
+      lodash.defaults: 4.2.0
+      lodash.isarguments: 3.1.0
+      redis-errors: 1.2.0
+      redis-parser: 3.0.0
+      standard-as-callback: 2.1.0
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
   /ipaddr.js@1.9.1:
     resolution: {integrity: sha512-0KI/607xoxSToH7GjN1FfSbLoU0+btTicjsQSWQlh/hZykN8KpmMf7uYwPW3R+akZ6R/w18ZlXSHBYXiYUPO3g==}
     engines: {node: '>= 0.10'}
@@ -6232,6 +6264,22 @@ packages:
   /jiti@1.21.0:
     resolution: {integrity: sha512-gFqAIbuKyyso/3G2qhiO2OM6shY6EPP/R0+mkDbyspxKazh8BXDC5FiFsUjlczgdNz/vfra0da2y+aHrusLG/Q==}
     hasBin: true
+
+  /jotai@2.8.0(@types/react@18.2.46)(react@18.2.0):
+    resolution: {integrity: sha512-yZNMC36FdLOksOr8qga0yLf14miCJlEThlp5DeFJNnqzm2+ZG7wLcJzoOyij5K6U6Xlc5ljQqPDlJRgqW0Y18g==}
+    engines: {node: '>=12.20.0'}
+    peerDependencies:
+      '@types/react': '>=17.0.0'
+      react: '>=17.0.0'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      react:
+        optional: true
+    dependencies:
+      '@types/react': 18.2.46
+      react: 18.2.0
+    dev: false
 
   /js-cookie@3.0.5:
     resolution: {integrity: sha512-cEiJEAEoIbWfCZYKWhVwFuvPX1gETRYPw6LlaTKoxD3s2AkXzkCjnp6h0V77ozyqj0jakteJ4YqDJT830+lVGw==}
@@ -9059,7 +9107,7 @@ packages:
       browserslist: 4.23.0
       chrome-trace-event: 1.0.3
       enhanced-resolve: 5.16.0
-      es-module-lexer: 1.4.2
+      es-module-lexer: 1.5.0
       eslint-scope: 5.1.1
       events: 3.3.0
       glob-to-regexp: 0.4.1
