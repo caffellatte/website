@@ -73,4 +73,10 @@ export class LinksService {
     // TODO: return JobID
     return { status: 'start' };
   }
+
+  async metadata(url: string): Promise<{ data: any }> {
+    const job = await this.linksQueue.add('metadata', { url });
+    // TODO: return JobID
+    return { data: job };
+  }
 }

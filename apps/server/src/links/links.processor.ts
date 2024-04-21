@@ -17,12 +17,17 @@ export class LinksProcessor extends WorkerHost {
 
   // @Process('analyze')
   async process(job: Job<any, any, string>, token?: string): Promise<any> {
-    this.logger.debug('Start Analyze...');
-    this.logger.debug(job.data);
-    this.logger.debug(token);
-    const links = await this.linksRepository.find();
-    this.logger.debug(links.length);
-    this.logger.debug('End Analyze');
-    return job.data;
+    if (job.name === 'metadata') {
+      return job.data;
+    }
+    if (job.name === 'analyze') {
+      this.logger.debug('Start Analyze...');
+      this.logger.debug(job.data);
+      this.logger.debug(token);
+      const links = await this.linksRepository.find();
+      this.logger.debug(links.length);
+      this.logger.debug('End Analyze');
+      return job.data;
+    }
   }
 }

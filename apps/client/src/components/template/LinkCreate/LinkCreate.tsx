@@ -3,55 +3,109 @@
 import { Typography } from "@client/components/ui/base/Typography";
 import { Button } from "@client/components/ui/base/Button";
 import { Input } from "@client/components/ui/base/Input";
-import { linkCreateSchema, LinkCreateFormSchema } from "@client/types/links";
-import { useForm, Controller } from "react-hook-form";
+import {
+  linkCreateSchema,
+  LinkCreateFormSchema,
+  linkMetadataSchema,
+  LinkMetadataFormSchema,
+} from "@client/types/links";
+import { useForm, Controller, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useLinkCreate } from "@client/services/hooks/useLinkCreate";
+import { useLinkMetadata } from "@client/services/hooks/useLinkMetadata";
 import { useEffect } from "react";
 
-const resolver = zodResolver(linkCreateSchema);
+const linkCreateResolver = zodResolver(linkCreateSchema);
+const linkMetadataResolver = zodResolver(linkMetadataSchema);
 
 const LinkCreate = () => {
   const linkCreate = useLinkCreate();
+  const linkMetadata = useLinkMetadata();
 
   const {
-    reset,
-    clearErrors,
-    handleSubmit,
-    setError,
-    control,
-    formState: { errors },
-  } = useForm<LinkCreateFormSchema>({ resolver });
+    reset: linkCreateReset,
+    clearErrors: linkCreateClearErrors,
+    handleSubmit: linkCreateHandleSubmit,
+    setError: linkCreateSetError,
+    control: linkCreateControl,
+    formState: { errors: linkCreateErrors },
+    getValues: linkCreateGetValues,
+  } = useForm<LinkCreateFormSchema>({ resolver: linkCreateResolver });
+
+  const {
+    setError: linkMetadataSetError,
+    formState: { errors: linkMetadataErrors },
+    setValue: linkMetadataSetValue,
+  } = useForm<LinkMetadataFormSchema>({ resolver: linkMetadataResolver });
+
+  const watchedUrl = useWatch({ control: linkCreateControl, name: "url" });
+
+  console.log(watchedUrl);
+
+  useEffect(() => {
+    console.log("data:", linkMetadata.data);
+  }, [linkMetadata.data]);
+
+  useEffect(() => {
+    linkMetadataSetError("linkMetadataError", {
+      type: "custom",
+      message: linkMetadata.error?.message,
+    });
+  }, [linkMetadata.error, linkMetadataSetError]);
+
+  useEffect(() => {
+    console.log("isPending:", linkMetadata.isPending);
+  }, [linkMetadata.isPending]);
+
+  useEffect(() => {
+    if (watchedUrl && watchedUrl.length > 3) {
+      linkCreateClearErrors("url");
+    }
+  }, [watchedUrl, linkCreateClearErrors]);
 
   useEffect(() => {
     console.log("data:", linkCreate.data);
   }, [linkCreate.data]);
 
   useEffect(() => {
-    setError("linkCreateError", {
+    linkCreateSetError("linkCreateError", {
       type: "custom",
       message: linkCreate.error?.message,
     });
-  }, [linkCreate.error, setError]);
+  }, [linkCreate.error, linkCreateSetError]);
 
   useEffect(() => {
     console.log("isPending:", linkCreate.isPending);
   }, [linkCreate.isPending]);
 
-  const onSubmit = async ({
+  const linkCreateOnSubmit = async ({
     title,
     description,
     url,
   }: LinkCreateFormSchema) => {
     console.log(title, description, url);
-    clearErrors("linkCreateError");
+    linkCreateClearErrors("linkCreateError");
     try {
       linkCreate.mutate({ title, description, url });
-      reset();
+      linkCreateReset();
     } catch (e) {
-      setError("linkCreateError", {
+      linkCreateSetError("linkCreateError", {
         type: "custom",
         message: "Link Create error",
+      });
+    }
+  };
+
+  const linkMetadataOnSubmit = async ({ url }: LinkMetadataFormSchema) => {
+    console.log(url);
+    // linkCreateClearErrors("linkCreateError");
+    try {
+      linkMetadata.mutate({ url });
+      // linkCreateReset();
+    } catch (e) {
+      linkMetadataSetError("linkMetadataError", {
+        type: "custom",
+        message: "Link Metadata error",
       });
     }
   };
@@ -59,13 +113,13 @@ const LinkCreate = () => {
   return (
     <form
       className="w-full flex flex-col gap-4"
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={linkCreateHandleSubmit(linkCreateOnSubmit)}
     >
       <div className="flex justify-between gap-4">
         <div className="basis-1/2 flex flex-col gap-2">
           <Controller
             name="title"
-            control={control}
+            control={linkCreateControl}
             defaultValue={""}
             render={({ field: { onChange, value, name, ref } }) => (
               <Input
@@ -80,16 +134,16 @@ const LinkCreate = () => {
               />
             )}
           />
-          {errors.title && (
+          {linkCreateErrors.title && (
             <Typography variant="body1" color="error">
-              {errors.title.message}
+              {linkCreateErrors.title.message}
             </Typography>
           )}
         </div>
         <div className="basis-1/2 flex flex-col gap-2">
           <Controller
             name="description"
-            control={control}
+            control={linkCreateControl}
             defaultValue={""}
             render={({ field: { onChange, value, name, ref } }) => (
               <Input
@@ -104,9 +158,9 @@ const LinkCreate = () => {
               />
             )}
           />
-          {errors.description && (
+          {linkCreateErrors.description && (
             <Typography variant="body1" color="error">
-              {errors.description.message}
+              {linkCreateErrors.description.message}
             </Typography>
           )}
         </div>
@@ -114,7 +168,7 @@ const LinkCreate = () => {
       <div className="flex flex-col gap-2">
         <Controller
           name="url"
-          control={control}
+          control={linkCreateControl}
           defaultValue={""}
           render={({ field: { onChange, value, name, ref } }) => (
             <Input
@@ -129,13 +183,36 @@ const LinkCreate = () => {
             />
           )}
         />
-        {errors.url && (
+        {linkCreateErrors.url && (
           <Typography variant="body1" color="error">
-            {errors.url.message}
+            {linkCreateErrors.url.message}
           </Typography>
         )}
       </div>
       <Button>Create</Button>
+      <Button
+        type="button"
+        onClick={() => {
+          // e.preventDefault();
+          const url = linkCreateGetValues("url");
+          if (url) {
+            linkMetadataSetValue("url", url);
+            linkMetadataOnSubmit({ url: url, linkMetadataError: "" });
+          } else {
+            linkCreateSetError("url", {
+              type: "required",
+              message: "This field is required (min 4 characters)",
+            });
+          }
+        }}
+      >
+        Meta
+      </Button>
+      {linkMetadataErrors.linkMetadataError && (
+        <Typography variant="body1" color="error">
+          {linkMetadataErrors.linkMetadataError.message}
+        </Typography>
+      )}
     </form>
   );
 };
