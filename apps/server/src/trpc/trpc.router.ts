@@ -105,6 +105,12 @@ export class TrpcRouter extends QueueEventsHost {
    * Links Router
    */
   hyperlinksRouter = this.trpc.router({
+    metadata: this.trpc.procedure
+      .input(z.object({ url: z.string() }))
+      .mutation(async ({ input }) => {
+        const { url } = input;
+        return await this.links.metadata(url);
+      }),
     analyze: this.trpc.procedure
       .input(z.object({ id: z.number(), type: z.string() }))
       .mutation(async ({ input }) => {
@@ -183,6 +189,7 @@ export class TrpcRouter extends QueueEventsHost {
   /**
    * App Router
    */
+  // TODO: ctx
   appRouter = this.trpc.router({
     auth: this.authRouter,
     hyperlinks: this.hyperlinksRouter,
