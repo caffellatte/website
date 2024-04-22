@@ -12,6 +12,7 @@ import { TRPCError } from '@trpc/server';
 import { observable } from '@trpc/server/observable';
 import { EventEmitter } from 'events';
 import { z } from 'zod';
+import { JwtPayload } from 'jsonwebtoken';
 
 @QueueEventsListener('links')
 @Injectable()
@@ -111,11 +112,15 @@ export class TrpcRouter extends QueueEventsHost {
         const { url } = input;
         return await this.links.metadata(url);
       }),
-    analyze: this.trpc.procedure
+    analyze: this.protectedProcedure
       .input(z.object({ id: z.number(), type: z.string() }))
-      .mutation(async ({ input }) => {
-        const { id, type } = input;
-        return await this.links.analyze(id, type);
+      .mutation(async ({ input, ctx }) => {
+        if (ctx.user.sub) {
+          const { id, type } = input;
+          return await this.links.analyze(Number(ctx.user.sub), id, type);
+        } else {
+          throw new TRPCError({ code: 'NOT_FOUND' });
+        }
       }),
     create: this.protectedProcedure
       .input(
@@ -194,22 +199,31 @@ export class TrpcRouter extends QueueEventsHost {
     auth: this.authRouter,
     hyperlinks: this.hyperlinksRouter,
     users: this.usersRouter,
-    update: this.trpc.procedure
+    update: this.protectedProcedure
       .input(z.object({ type: z.string() }))
-      .subscription(({ input }) => {
-        return observable<{ timestamp: number; type: 'links' | 'reports' }>(
-          (emit) => {
-            const onUpdate = ({ type }: { type: 'links' | 'reports' }) => {
-              if (input.type === type) {
-                emit.next({ timestamp: Date.now(), type: type });
-              }
-            };
-            this.ee.on('update', onUpdate);
-            return () => {
-              this.ee.off('update', onUpdate);
-            };
-          },
-        );
+      .subscription(({ input, ctx }) => {
+        return observable<{
+          timestamp: number;
+          user_id: number;
+          type: 'links' | 'reports';
+          ctx: string | JwtPayload;
+        }>((emit) => {
+          const onUpdate = ({
+            type,
+            user_id,
+          }: {
+            type: 'links' | 'reports';
+            user_id: number;
+          }) => {
+            if (input.type === type && Number(ctx.user.sub) === user_id) {
+              emit.next({ timestamp: Date.now(), type: type, ctx, user_id });
+            }
+          };
+          this.ee.on('update', onUpdate);
+          return () => {
+            this.ee.off('update', onUpdate);
+          };
+        });
       }),
   });
 }

@@ -46,6 +46,16 @@ async function bootstrap(): Promise<void> {
     origin: '*',
   });
 
+  process.on('SIGTERM', () => {
+    console.log('SIGTERM');
+    server.close();
+  });
+
+  process.on('SIGINT', () => {
+    console.log('SIGINT');
+    server.close();
+  });
+
   await server.listen(4000);
 }
 

@@ -68,8 +68,12 @@ export class LinksService {
     }
   }
 
-  async analyze(id: number, type: string): Promise<{ status: string }> {
-    await this.linksQueue.add('analyze', { id, type });
+  async analyze(
+    user_id: number,
+    id: number,
+    type: string,
+  ): Promise<{ status: string }> {
+    await this.linksQueue.add('analyze', { user_id, id, type });
     // TODO: return JobID
     return { status: 'start' };
   }
