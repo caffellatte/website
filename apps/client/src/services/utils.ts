@@ -28,8 +28,8 @@ export async function handleTrpcUnauthError(
       });
 
       const { access_token, refresh_token } = refreshResponse;
-      Cookies.set("access_token", access_token);
-      Cookies.set("refresh_token", refresh_token);
+      Cookies.set("access_token", access_token, { expires: 7 });
+      Cookies.set("refresh_token", refresh_token, { expires: 7 });
 
       const { Authorization, ...headers } = options.headers;
 
