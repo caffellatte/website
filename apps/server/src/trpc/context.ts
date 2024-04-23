@@ -15,25 +15,8 @@ const verifyJwtPromise = (
   });
 };
 
-function getCookie(cookies: string, cookiename: string) {
-  // Get name followed by anything except a semicolon
-  const cookiestring = RegExp(cookiename + '=[^;]+').exec(cookies);
-  // Return everything after the equal sign, or an empty string if the cookie name not found
-  return decodeURIComponent(
-    !!cookiestring ? cookiestring.toString().replace(/^[^=]+./, '') : '',
-  );
-}
-
-//Sample usage
-// var cookieValue = getCook('MYBIGCOOKIE');
-
 export async function createContext({ req }: CreateFastifyContextOptions) {
-  let authorization = '';
-  let access_token = '';
-  if (req.headers.cookie) {
-    access_token = getCookie(req.headers.cookie, 'access_token');
-  }
-  authorization = req.headers.authorization ?? access_token;
+  const { authorization } = req.headers;
   if (authorization !== 'undefined' && authorization) {
     const user = await verifyJwtPromise(
       authorization,

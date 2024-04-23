@@ -12,6 +12,7 @@
     "noFallthroughCasesInSwitch": true,
     "paths": {
       "@server/*": ["./apps/server/src/*"],
+      "@broker/*": ["./apps/broker/src/*"],
       "@client/*": ["./apps/client/src/*"]
     }
   }

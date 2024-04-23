@@ -27,9 +27,10 @@ export async function handleTrpcUnauthError(
         refresh_token: refreshToken,
       });
 
-      const { access_token, refresh_token } = refreshResponse;
+      const { access_token, refresh_token, user_id } = refreshResponse;
       Cookies.set("access_token", access_token, { expires: 7 });
       Cookies.set("refresh_token", refresh_token, { expires: 7 });
+      Cookies.set("user_id", user_id.toString(), { expires: 7 });
 
       const { Authorization, ...headers } = options.headers;
 
@@ -44,6 +45,7 @@ export async function handleTrpcUnauthError(
       // Todo: navigate to login
       Cookies.remove("access_token");
       Cookies.remove("refresh_token");
+      Cookies.remove("user_id");
       return res;
     }
   } else {
