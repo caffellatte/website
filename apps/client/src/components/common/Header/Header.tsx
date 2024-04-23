@@ -23,6 +23,7 @@ const Header = () => {
     setUser(userAtomInitial);
     Cookies.remove("access_token");
     Cookies.remove("refresh_token");
+    Cookies.remove("user_id");
     router.push("/login");
   }
 

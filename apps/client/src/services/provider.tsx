@@ -15,7 +15,7 @@ import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experime
 import { Provider } from "jotai/react";
 
 const wsClient = createWSClient({
-  url: `ws://localhost:4000/trpc`,
+  url: `ws://localhost:4001/`,
 });
 
 function Providers({ children }: React.PropsWithChildren) {

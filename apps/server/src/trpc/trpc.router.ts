@@ -1,8 +1,3 @@
-import {
-  OnQueueEvent,
-  QueueEventsHost,
-  QueueEventsListener,
-} from '@nestjs/bullmq';
 import { Injectable } from '@nestjs/common';
 import { AuthService } from '@server/auth/auth.service';
 import { LinksService } from '@server/links/links.service';
@@ -14,9 +9,8 @@ import { EventEmitter } from 'events';
 import { z } from 'zod';
 import { JwtPayload } from 'jsonwebtoken';
 
-@QueueEventsListener('links')
 @Injectable()
-export class TrpcRouter extends QueueEventsHost {
+export class TrpcRouter {
   ee = new EventEmitter();
 
   constructor(
@@ -24,22 +18,7 @@ export class TrpcRouter extends QueueEventsHost {
     private readonly auth: AuthService,
     private readonly links: LinksService,
     private readonly users: UsersService,
-  ) {
-    super();
-  }
-
-  @OnQueueEvent('completed')
-  onCompleted({
-    jobId,
-    returnvalue,
-  }: {
-    jobId: string;
-    returnvalue: string;
-    prev?: string;
-  }) {
-    console.log('jobId: ', jobId);
-    this.ee.emit('update', returnvalue);
-  }
+  ) {}
 
   /**
    * Protected Procedure
@@ -199,32 +178,32 @@ export class TrpcRouter extends QueueEventsHost {
     auth: this.authRouter,
     hyperlinks: this.hyperlinksRouter,
     users: this.usersRouter,
-    update: this.protectedProcedure
-      .input(z.object({ type: z.string() }))
-      .subscription(({ input, ctx }) => {
-        return observable<{
-          timestamp: number;
-          user_id: number;
-          type: 'links' | 'reports';
-          ctx: string | JwtPayload;
-        }>((emit) => {
-          const onUpdate = ({
-            type,
-            user_id,
-          }: {
-            type: 'links' | 'reports';
-            user_id: number;
-          }) => {
-            if (input.type === type && Number(ctx.user.sub) === user_id) {
-              emit.next({ timestamp: Date.now(), type: type, ctx, user_id });
-            }
-          };
-          this.ee.on('update', onUpdate);
-          return () => {
-            this.ee.off('update', onUpdate);
-          };
-        });
-      }),
+    // update: this.protectedProcedure
+    //   .input(z.object({ type: z.string() }))
+    //   .subscription(({ input, ctx }) => {
+    //     return observable<{
+    //       timestamp: number;
+    //       user_id: number;
+    //       type: 'links' | 'reports';
+    //       ctx: string | JwtPayload;
+    //     }>((emit) => {
+    //       const onUpdate = ({
+    //         type,
+    //         user_id,
+    //       }: {
+    //         type: 'links' | 'reports';
+    //         user_id: number;
+    //       }) => {
+    //         if (input.type === type && Number(ctx.user.sub) === user_id) {
+    //           emit.next({ timestamp: Date.now(), type: type, ctx, user_id });
+    //         }
+    //       };
+    //       this.ee.on('update', onUpdate);
+    //       return () => {
+    //         this.ee.off('update', onUpdate);
+    //       };
+    //     });
+    //   }),
   });
 }
 

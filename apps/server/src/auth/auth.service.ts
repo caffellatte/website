@@ -21,7 +21,7 @@ export class AuthService {
   async register(
     username: string,
     password: string,
-  ): Promise<{ access_token: string; refresh_token: string }> {
+  ): Promise<{ access_token: string; refresh_token: string; user_id: number }> {
     const existedUser = await this.usersService.findOneByUsername(username);
     if (existedUser) {
       throw new TRPCError({
@@ -37,13 +37,14 @@ export class AuthService {
         secret: this.refreshSecret,
         expiresIn: this.refreshExpiresIn,
       }),
+      user_id: payload.sub,
     };
   }
 
   async login(
     username: string,
     pass: string,
-  ): Promise<{ access_token: string; refresh_token: string }> {
+  ): Promise<{ access_token: string; refresh_token: string; user_id: number }> {
     const user = await this.usersService.findOneByUsername(username);
     if (!user) {
       throw new TRPCError({
@@ -67,12 +68,13 @@ export class AuthService {
         secret: this.refreshSecret,
         expiresIn: this.refreshExpiresIn,
       }),
+      user_id: payload.sub,
     };
   }
 
   async refresh(
     refresh_token: string,
-  ): Promise<{ access_token: string; refresh_token: string }> {
+  ): Promise<{ access_token: string; refresh_token: string; user_id: number }> {
     const payload = await this.jwtService.verifyAsync(refresh_token, {
       secret: this.refreshSecret,
     });
@@ -91,6 +93,7 @@ export class AuthService {
           expiresIn: this.refreshExpiresIn,
         },
       ),
+      user_id: payload.sub,
     };
   }
 }

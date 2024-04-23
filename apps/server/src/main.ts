@@ -1,5 +1,4 @@
 import fastify from 'fastify';
-import ws from '@fastify/websocket';
 import { NestFactory } from '@nestjs/core';
 import {
   FastifyAdapter,
@@ -28,9 +27,7 @@ async function bootstrap(): Promise<void> {
 
   const trpc = server.get(TrpcRouter);
 
-  server.register(ws);
   server.register(fastifyTRPCPlugin, {
-    useWSS: true,
     prefix: '/trpc',
     trpcOptions: {
       router: trpc.appRouter,
@@ -44,16 +41,6 @@ async function bootstrap(): Promise<void> {
   app.enableCors({
     credentials: true,
     origin: '*',
-  });
-
-  process.on('SIGTERM', () => {
-    console.log('SIGTERM');
-    server.close();
-  });
-
-  process.on('SIGINT', () => {
-    console.log('SIGINT');
-    server.close();
   });
 
   await server.listen(4000);

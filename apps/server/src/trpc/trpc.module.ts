@@ -8,7 +8,6 @@ import { Link } from '@server/links/link.entity';
 import { User } from '@server/users/user.entity';
 import { UsersModule } from '@server/users/users.module';
 import { UsersService } from '@server/users/users.service';
-import { BullModule } from '@nestjs/bullmq';
 import { AuthModule } from '@server/auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 
@@ -16,15 +15,11 @@ import { ConfigModule } from '@nestjs/config';
   imports: [
     ConfigModule,
     TypeOrmModule.forFeature([Link, User]),
-    BullModule.registerQueue({
-      name: 'links',
-    }),
     LinksModule,
     UsersModule,
     AuthModule,
   ],
   controllers: [],
   providers: [TrpcRouter, TrpcService, LinksService, UsersService],
-  exports: [BullModule],
 })
 export class TrpcModule {}
