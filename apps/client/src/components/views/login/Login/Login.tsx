@@ -1,7 +1,7 @@
 "use client";
 
 import { Input } from "@client/components/ui/base/Input";
-import { Button } from "@client/components/ui/base/Button";
+import { Button } from "@client/components/ui/button";
 import { Typography } from "@client/components/ui/base/Typography";
 import { loginSchema, LoginFormSchema } from "@client/types/auth";
 import { useForm, Controller } from "react-hook-form";
@@ -117,7 +117,7 @@ const Login = () => {
             </Typography>
           )}
         </div>
-        <Button type="submit">Login</Button>
+        <Button>Login</Button>
         {errors.loginError && (
           <Typography variant="body1" color="error">
             {errors.loginError.message}

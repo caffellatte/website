@@ -1,7 +1,7 @@
 "use client";
 
 import { Typography } from "@client/components/ui/base/Typography";
-import { Button } from "@client/components/ui/base/Button";
+import { Button } from "@client/components/ui/button";
 import { Input } from "@client/components/ui/base/Input";
 import {
   linkCreateSchema,
