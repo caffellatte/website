@@ -15,6 +15,11 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@client/components/ui/dropdown-menu";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@client/components/ui/avatar";
 
 const Header = () => {
   const router = useRouter();
@@ -34,7 +39,12 @@ const Header = () => {
       </Link>
       {user.username ? (
         <DropdownMenu>
-          <DropdownMenuTrigger>{user.username}</DropdownMenuTrigger>
+          <DropdownMenuTrigger className=" rounded-full">
+            <Avatar>
+              <AvatarImage src="" />
+              <AvatarFallback>{user.username[0].toUpperCase()}</AvatarFallback>
+            </Avatar>
+          </DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuItem>Profile</DropdownMenuItem>
