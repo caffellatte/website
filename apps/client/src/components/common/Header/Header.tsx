@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, buttonVariants } from "@client/components/ui/base/Button";
+import { buttonVariants } from "@client/components/ui/button";
 import { typographyVariants } from "@client/components/ui/base/Typography";
 import { cn } from "@client/lib/utils";
 import Link from "next/link";
@@ -52,18 +52,22 @@ const Header = () => {
           </DropdownMenuContent>
         </DropdownMenu>
       ) : (
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-2">
           <Link
-            className={cn(buttonVariants({ size: "none", variant: "link" }))}
+            className={cn(
+              buttonVariants({ size: "default", variant: "outline" }),
+            )}
             href="/login"
           >
-            login
+            Login
           </Link>
           <Link
-            className={cn(buttonVariants({ size: "none", variant: "link" }))}
+            className={cn(
+              buttonVariants({ size: "default", variant: "outline" }),
+            )}
             href="/register"
           >
-            register
+            Register
           </Link>
         </div>
       )}
