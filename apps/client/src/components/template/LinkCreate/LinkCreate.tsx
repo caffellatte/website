@@ -1,6 +1,6 @@
 "use client";
 
-import { Typography } from "@client/components/ui/base/Typography";
+import { Typography } from "@client/components/ui/typography";
 import { Button } from "@client/components/ui/button";
 import { Input } from "@client/components/ui/input";
 import {
@@ -14,6 +14,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useLinkCreate } from "@client/services/hooks/useLinkCreate";
 import { useLinkMetadata } from "@client/services/hooks/useLinkMetadata";
 import { useEffect } from "react";
+import { useAutoAnimate } from "@formkit/auto-animate/react";
 
 const linkCreateResolver = zodResolver(linkCreateSchema);
 const linkMetadataResolver = zodResolver(linkMetadataSchema);
@@ -21,6 +22,9 @@ const linkMetadataResolver = zodResolver(linkMetadataSchema);
 const LinkCreate = () => {
   const linkCreate = useLinkCreate();
   const linkMetadata = useLinkMetadata();
+  const [titleAutoAnimate] = useAutoAnimate();
+  const [descriptionAutoAnimate] = useAutoAnimate();
+  const [urlAutoAnimate] = useAutoAnimate();
 
   const {
     reset: linkCreateReset,
@@ -116,7 +120,7 @@ const LinkCreate = () => {
       onSubmit={linkCreateHandleSubmit(linkCreateOnSubmit)}
     >
       <div className="flex justify-between gap-4">
-        <div className="basis-1/2 flex flex-col gap-2">
+        <div className="basis-1/2 flex flex-col gap-2" ref={titleAutoAnimate}>
           <Controller
             name="title"
             control={linkCreateControl}
@@ -135,12 +139,15 @@ const LinkCreate = () => {
             )}
           />
           {linkCreateErrors.title && (
-            <Typography variant="body1" color="error">
+            <Typography variant="small" color="error">
               {linkCreateErrors.title.message}
             </Typography>
           )}
         </div>
-        <div className="basis-1/2 flex flex-col gap-2">
+        <div
+          className="basis-1/2 flex flex-col gap-2"
+          ref={descriptionAutoAnimate}
+        >
           <Controller
             name="description"
             control={linkCreateControl}
@@ -159,13 +166,13 @@ const LinkCreate = () => {
             )}
           />
           {linkCreateErrors.description && (
-            <Typography variant="body1" color="error">
+            <Typography variant="small" color="error">
               {linkCreateErrors.description.message}
             </Typography>
           )}
         </div>
       </div>
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2" ref={urlAutoAnimate}>
         <Controller
           name="url"
           control={linkCreateControl}
@@ -184,7 +191,7 @@ const LinkCreate = () => {
           )}
         />
         {linkCreateErrors.url && (
-          <Typography variant="body1" color="error">
+          <Typography variant="small" color="error">
             {linkCreateErrors.url.message}
           </Typography>
         )}
@@ -209,7 +216,7 @@ const LinkCreate = () => {
         Meta
       </Button>
       {linkMetadataErrors.linkMetadataError && (
-        <Typography variant="body1" color="error">
+        <Typography variant="small" color="error">
           {linkMetadataErrors.linkMetadataError.message}
         </Typography>
       )}

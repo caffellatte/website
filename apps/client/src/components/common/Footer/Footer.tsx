@@ -1,4 +1,4 @@
-import { typographyVariants } from "@client/components/ui/base/Typography";
+import { buttonVariants } from "@client/components/ui/button";
 import Link from "next/link";
 
 const Footer = () => {
@@ -6,7 +6,7 @@ const Footer = () => {
     <footer className="py-4">
       <Link
         href="https://github.com/caffellatte/website"
-        className={typographyVariants({ variant: "link" })}
+        className={buttonVariants({ variant: "link" })}
       >
         github.com/caffellatte/website
       </Link>

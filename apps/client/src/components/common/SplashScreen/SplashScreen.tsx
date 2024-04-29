@@ -3,7 +3,7 @@
 import { cn } from "@client/lib/utils";
 import { Loader } from "@client/components/icons";
 import { FC, useEffect, useState, useRef } from "react";
-import { Typography } from "@client/components/ui/base/Typography";
+import { Typography } from "@client/components/ui/typography";
 import anime, { AnimeTimelineInstance, AnimeInstance } from "animejs";
 
 interface SplashScreenProps {
@@ -82,7 +82,7 @@ const SplashScreen: FC<SplashScreenProps> = ({ finishLoading }) => {
       />
       <Typography
         className={cn("absolute", isMounted && "hidden")}
-        variant="body1"
+        variant="muted"
       >
         Loading...
       </Typography>

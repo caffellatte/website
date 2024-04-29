@@ -1,7 +1,7 @@
 "use client";
 
-import { buttonVariants } from "@client/components/ui/button";
-import { typographyVariants } from "@client/components/ui/base/Typography";
+import { Button, buttonVariants } from "@client/components/ui/button";
+import { typographyVariants } from "@client/components/ui/typography";
 import { cn } from "@client/lib/utils";
 import Link from "next/link";
 import { useAtom } from "jotai";
@@ -34,18 +34,22 @@ const Header = () => {
 
   return (
     <header className="flex items-center justify-between py-4 w-full">
-      <Link href="/" className={cn(typographyVariants({ variant: "h5" }))}>
+      <Link href="/" className={cn(typographyVariants({ variant: "large" }))}>
         website
       </Link>
       {user.username ? (
         <DropdownMenu>
-          <DropdownMenuTrigger className=" rounded-full">
-            <Avatar>
-              <AvatarImage src="" />
-              <AvatarFallback>{user.username[0].toUpperCase()}</AvatarFallback>
-            </Avatar>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" size="icon" className="rounded-full">
+              <Avatar>
+                <AvatarImage src="" />
+                <AvatarFallback>
+                  {user.username[0].toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+            </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent>
+          <DropdownMenuContent align="end">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuItem>Profile</DropdownMenuItem>
             <DropdownMenuItem onClick={logout}>Logout</DropdownMenuItem>
