@@ -2,7 +2,7 @@
 
 import { Input } from "@client/components/ui/input";
 import { Button } from "@client/components/ui/button";
-import { Typography } from "@client/components/ui/base/Typography";
+import { Typography } from "@client/components/ui/typography";
 import { registerSchema, RegisterFormSchema } from "@client/types/auth";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -63,7 +63,7 @@ const Register = () => {
 
   return (
     <main className="flex flex-col items-center gap-6">
-      <Typography variant="h5">Register</Typography>
+      <Typography variant="h3">Register</Typography>
       <form
         className="flex min-w-[320px] flex-col gap-4"
         onSubmit={handleSubmit(onSubmit)}
@@ -88,7 +88,7 @@ const Register = () => {
             )}
           />
           {errors.username && (
-            <Typography variant="body1" color="error">
+            <Typography variant="small" color="error">
               {errors.username.message}
             </Typography>
           )}
@@ -112,14 +112,14 @@ const Register = () => {
             )}
           />
           {errors.password && (
-            <Typography variant="body1" color="error">
+            <Typography variant="small" color="error">
               {errors.password.message}
             </Typography>
           )}
         </div>
         <Button>Register</Button>
         {errors.registerError && (
-          <Typography variant="body1" color="error">
+          <Typography variant="small" color="error">
             {errors.registerError.message}
           </Typography>
         )}

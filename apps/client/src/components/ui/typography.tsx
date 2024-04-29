@@ -7,53 +7,55 @@ import { forwardRef, HTMLAttributes } from "react";
 const variants = {
   h1: "h1",
   h2: "h2",
-  h3: "h2",
-  h4: "h2",
-  h5: "h2",
-  h6: "h2",
-  subheading1: "h6",
-  subheading2: "h6",
-  body1: "p",
-  body2: "p",
+  h3: "h3",
+  h4: "h4",
+  p: "p",
+  blockquote: "p",
+  inlinecode: "code",
+  lead: "p",
+  large: "div",
+  small: "small",
+  muted: "p",
   link: "span",
 };
 
 const typographyStyleVariants = {
-  h1: "text-6xl",
-  h2: "text-5xl",
-  h3: "text-4xl",
-  h4: "text-3xl",
-  h5: "text-2xl",
-  h6: "text-xl",
-  subheading1: "text-1xl font-bold",
-  subheading2: "text-1xl font-semibold",
-  body1: "text-base",
-  body2: "text-base font-bold",
-  link: "underline underline-offset-2 hover:no-underline transition duration-200 ease-in-out",
+  h1: "scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl",
+  h2: "scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0",
+  h3: "scroll-m-20 text-2xl font-semibold tracking-tight",
+  h4: "scroll-m-20 text-xl font-semibold tracking-tight",
+  p: "leading-7 [&:not(:first-child)]:mt-6",
+  blockquote: "mt-6 border-l-2 pl-6 italic",
+  inlinecode:
+    "relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold",
+  lead: "text-xl text-muted-foreground",
+  large: "text-lg font-semibold",
+  small: "text-sm font-medium leading-none",
+  muted: "text-sm text-muted-foreground",
+  link: "font-medium text-primary underline underline-offset-4",
 };
 
 const typographyVariants = cva("text-base font-normal", {
   variants: {
     variant: typographyStyleVariants,
     color: {
-      primary: "text-primary",
-      secondary: "text-secondary-foreground",
-      main: "text-foreground",
-      accent: "text-accent",
-      white: "text-white",
-      error: "text-error",
+      default: "",
+      error: "text-destructive",
     },
   },
   defaultVariants: {
-    variant: "body1",
-    color: "main",
+    variant: "p",
+    color: "default",
   },
 });
 
 interface TypographyProps
   extends Omit<
       HTMLAttributes<
-        HTMLParagraphElement | HTMLHeadingElement | HTMLSpanElement
+        | HTMLParagraphElement
+        | HTMLHeadingElement
+        | HTMLSpanElement
+        | HTMLDivElement
       >,
       "color"
     >,

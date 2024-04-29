@@ -4,7 +4,7 @@ import { IconProps } from "@client/types/icon";
 export const Loader = React.forwardRef<SVGSVGElement, IconProps>(
   (
     { color = "currentColor", fill = "backgroundColor", ...props },
-    forwardedRef
+    forwardedRef,
   ) => {
     return (
       <svg
@@ -20,7 +20,7 @@ export const Loader = React.forwardRef<SVGSVGElement, IconProps>(
           <path
             id="loader-path"
             d="m51.4,8.65l-43.1,0.1l0.2,42.6l43.2,-0.4l-0.3,-48.3z"
-            opacity="NaN"
+            opacity="0"
             strokeWidth="12"
             stroke={color}
             fill={fill}
@@ -28,7 +28,7 @@ export const Loader = React.forwardRef<SVGSVGElement, IconProps>(
         </g>
       </svg>
     );
-  }
+  },
 );
 
 Loader.displayName = "Loader";
