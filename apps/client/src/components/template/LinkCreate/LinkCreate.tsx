@@ -2,7 +2,7 @@
 
 import { Typography } from "@client/components/ui/base/Typography";
 import { Button } from "@client/components/ui/button";
-import { Input } from "@client/components/ui/base/Input";
+import { Input } from "@client/components/ui/input";
 import {
   linkCreateSchema,
   LinkCreateFormSchema,
@@ -148,7 +148,7 @@ const LinkCreate = () => {
             render={({ field: { onChange, value, name, ref } }) => (
               <Input
                 placeholder="description"
-                maxLength={36}
+                maxLength={256}
                 id="description"
                 type="text"
                 name={name}
@@ -173,7 +173,7 @@ const LinkCreate = () => {
           render={({ field: { onChange, value, name, ref } }) => (
             <Input
               placeholder="url"
-              maxLength={36}
+              maxLength={256}
               id="url"
               type="text"
               name={name}
