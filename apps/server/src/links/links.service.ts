@@ -78,8 +78,12 @@ export class LinksService {
     return { status: 'start' };
   }
 
-  async metadata(url: string): Promise<{ data: any }> {
-    const job = await this.linksQueue.add('metadata', { url });
+  async metadata(
+    user_id: number,
+    url: string,
+    type: string,
+  ): Promise<{ data: any }> {
+    const job = await this.linksQueue.add('metadata', { user_id, url, type });
     // TODO: return JobID
     return { data: job };
   }

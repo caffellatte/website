@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Link } from '@server/links/link.entity';
 import { Job } from 'bullmq';
 import { Repository } from 'typeorm';
-// import urlMetadata = require('url-metadata');
+import urlMetadata = require('url-metadata');
 
 @Processor('links')
 export class LinksProcessor extends WorkerHost {
@@ -19,12 +19,23 @@ export class LinksProcessor extends WorkerHost {
   // @Process('analyze')
   async process(job: Job<any, any, string>, token?: string): Promise<any> {
     if (job.name === 'metadata') {
-      const { url } = job.data;
-      console.log(url);
-      // if (url) {
-      //   if(url.includs("https://"))
-      // }
-      return job.data;
+      console.log(job.data);
+      let url = '';
+
+      if (!/^https?:\/\//i.test(job.data.url)) {
+        url = 'http://' + job.data.url;
+      } else {
+        url = job.data.url;
+      }
+      try {
+        const metadata = await urlMetadata(url);
+        console.log(metadata);
+        job.data.data = metadata;
+        return job.data;
+      } catch (error) {
+        job.data.data = error;
+        return job.data;
+      }
     }
     if (job.name === 'analyze') {
       this.logger.debug('Start Analyze...');
