@@ -2,6 +2,7 @@
 
 import LinkCreate from "@client/components/template/LinkCreate";
 import LinksTable from "@client/components/template/LinksTable";
+import CollectionCreate from "@client/components/template/CollectionCreate";
 // import { useLinkFindById } from "@client/services/hooks/useLinkFindById";
 
 const Home = () => {
@@ -9,6 +10,7 @@ const Home = () => {
   return (
     <main className="flex flex-col justify-between gap-3 w-full flex-grow">
       <LinksTable />
+      <CollectionCreate />
       <LinkCreate />
     </main>
   );

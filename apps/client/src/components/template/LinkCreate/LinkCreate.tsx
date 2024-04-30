@@ -242,6 +242,7 @@ const LinkCreate = () => {
       >
         Meta
       </Button>
+      {/* TODO: add linkCreateErrors */}
       {linkMetadataErrors.linkMetadataError && (
         <Typography variant="small" color="error">
           {linkMetadataErrors.linkMetadataError.message}

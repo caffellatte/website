@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { AuthService } from '@server/auth/auth.service';
+import { CollectionsService } from '@server/collections/collections.service';
 import { LinksService } from '@server/links/links.service';
 import { TrpcService } from '@server/trpc/trpc.service';
 import { UsersService } from '@server/users/users.service';
@@ -16,6 +17,7 @@ export class TrpcRouter {
     private readonly auth: AuthService,
     private readonly links: LinksService,
     private readonly users: UsersService,
+    private readonly collections: CollectionsService,
   ) {}
 
   /**
@@ -173,12 +175,43 @@ export class TrpcRouter {
   });
 
   /**
+   * Collections Router
+   */
+  collectionsRouter = this.trpc.router({
+    create: this.protectedProcedure
+      .input(
+        z.object({
+          title: z.string(),
+          description: z.string(),
+          path: z.string(),
+        }),
+      )
+      .mutation(async ({ input, ctx }) => {
+        if (ctx.user.sub) {
+          const { title, description, path } = input;
+          console.log('trpc.router.ts:', title, description, path);
+          const collection = await this.collections.create(
+            Number(ctx.user.sub),
+            title,
+            description,
+            path,
+          );
+          this.ee.emit('update', { type: 'collections' });
+          return collection;
+        } else {
+          throw new TRPCError({ code: 'UNAUTHORIZED' });
+        }
+      }),
+  });
+
+  /**
    * App Router
    */
   // TODO: ctx
   appRouter = this.trpc.router({
     auth: this.authRouter,
     hyperlinks: this.hyperlinksRouter,
+    collections: this.collectionsRouter,
     users: this.usersRouter,
     // update: this.protectedProcedure
     //   .input(z.object({ type: z.string() }))
