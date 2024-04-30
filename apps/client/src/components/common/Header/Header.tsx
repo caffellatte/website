@@ -59,7 +59,7 @@ const Header = () => {
         <div className="flex items-center gap-2">
           <Link
             className={cn(
-              buttonVariants({ size: "default", variant: "outline" }),
+              buttonVariants({ size: "default", variant: "ghost" }),
             )}
             href="/login"
           >
@@ -67,7 +67,7 @@ const Header = () => {
           </Link>
           <Link
             className={cn(
-              buttonVariants({ size: "default", variant: "outline" }),
+              buttonVariants({ size: "default", variant: "default" }),
             )}
             href="/register"
           >

@@ -9,6 +9,7 @@ import { User } from '@server/users/user.entity';
 import { UsersModule } from '@server/users/users.module';
 import { UsersService } from '@server/users/users.service';
 import { AuthModule } from '@server/auth/auth.module';
+import { CollectionsModule } from '@server/collections/collections.module';
 import { ConfigModule } from '@nestjs/config';
 
 @Module({
@@ -18,6 +19,7 @@ import { ConfigModule } from '@nestjs/config';
     LinksModule,
     UsersModule,
     AuthModule,
+    CollectionsModule,
   ],
   controllers: [],
   providers: [TrpcRouter, TrpcService, LinksService, UsersService],
