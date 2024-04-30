@@ -4,10 +4,8 @@ import { LinksService } from '@server/links/links.service';
 import { TrpcService } from '@server/trpc/trpc.service';
 import { UsersService } from '@server/users/users.service';
 import { TRPCError } from '@trpc/server';
-import { observable } from '@trpc/server/observable';
 import { EventEmitter } from 'events';
 import { z } from 'zod';
-import { JwtPayload } from 'jsonwebtoken';
 
 @Injectable()
 export class TrpcRouter {
@@ -85,11 +83,15 @@ export class TrpcRouter {
    * Links Router
    */
   hyperlinksRouter = this.trpc.router({
-    metadata: this.trpc.procedure
-      .input(z.object({ url: z.string() }))
-      .mutation(async ({ input }) => {
-        const { url } = input;
-        return await this.links.metadata(url);
+    metadata: this.protectedProcedure
+      .input(z.object({ url: z.string(), type: z.string() }))
+      .mutation(async ({ input, ctx }) => {
+        if (ctx.user.sub) {
+          const { url, type } = input;
+          return await this.links.metadata(Number(ctx.user.sub), url, type);
+        } else {
+          throw new TRPCError({ code: 'UNAUTHORIZED' });
+        }
       }),
     analyze: this.protectedProcedure
       .input(z.object({ id: z.number(), type: z.string() }))
@@ -98,7 +100,7 @@ export class TrpcRouter {
           const { id, type } = input;
           return await this.links.analyze(Number(ctx.user.sub), id, type);
         } else {
-          throw new TRPCError({ code: 'NOT_FOUND' });
+          throw new TRPCError({ code: 'UNAUTHORIZED' });
         }
       }),
     create: this.protectedProcedure
@@ -122,7 +124,7 @@ export class TrpcRouter {
           this.ee.emit('update', { type: 'links' });
           return link;
         } else {
-          throw new TRPCError({ code: 'NOT_FOUND' });
+          throw new TRPCError({ code: 'UNAUTHORIZED' });
         }
       }),
     findAll: this.trpc.procedure
@@ -156,7 +158,7 @@ export class TrpcRouter {
             nextCursor,
           };
         } else {
-          throw new TRPCError({ code: 'NOT_FOUND' });
+          throw new TRPCError({ code: 'UNAUTHORIZED' });
         }
       }),
     findById: this.trpc.procedure

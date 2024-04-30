@@ -47,43 +47,35 @@ export class TrpcRouter extends QueueEventsHost {
   });
 
   appRouter = this.trpc.router({
-    // update: this.protectedProcedure
-    //   .input(z.object({ type: z.string() }))
-    //   .subscription(({ input }) => {
-    //     return observable<{ timestamp: number; type: 'links' | 'reports' }>(
-    //       (emit) => {
-    //         const onUpdate = ({ type }: { type: 'links' | 'reports' }) => {
-    //           if (input.type === type) {
-    //             emit.next({ timestamp: Date.now(), type: type });
-    //           }
-    //         };
-    //         this.ee.on('update', onUpdate);
-    //         return () => {
-    //           this.ee.off('update', onUpdate);
-    //         };
-    //       },
-    //     );
-    //   }),
     update: this.protectedProcedure
       .input(z.object({ type: z.string() }))
       .subscription(({ input, ctx }) => {
         return observable<{
           timestamp: number;
           user_id: number;
-          type: 'links' | 'reports';
-          ctx: any;
+          type: 'links' | 'reports' | 'analyze' | 'metadata';
+          ctx: {
+            user: { id: number } | { id: null };
+          };
+          data: any;
         }>((emit) => {
           const onUpdate = ({
             type,
             user_id,
+            data,
           }: {
-            type: 'links' | 'reports';
+            type: 'links' | 'reports' | 'analyze' | 'metadata';
             user_id: number;
+            data: any;
           }) => {
-            // if (input.type === type && Number(ctx.user.sub) === user_id) {
             if (input.type === type && ctx.user.id === user_id) {
-              emit.next({ timestamp: Date.now(), type: type, ctx, user_id });
-              // emit.next({ timestamp: Date.now(), type: type, ctx, user_id });
+              emit.next({
+                timestamp: Date.now(),
+                type: type,
+                ctx,
+                user_id,
+                data,
+              });
             }
           };
           this.ee.on('update', onUpdate);

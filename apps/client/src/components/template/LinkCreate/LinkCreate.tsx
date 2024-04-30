@@ -15,6 +15,7 @@ import { useLinkCreate } from "@client/services/hooks/useLinkCreate";
 import { useLinkMetadata } from "@client/services/hooks/useLinkMetadata";
 import { useEffect } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
+import { trpcBroker } from "@client/services/trpc";
 
 const linkCreateResolver = zodResolver(linkCreateSchema);
 const linkMetadataResolver = zodResolver(linkMetadataSchema);
@@ -34,6 +35,7 @@ const LinkCreate = () => {
     control: linkCreateControl,
     formState: { errors: linkCreateErrors },
     getValues: linkCreateGetValues,
+    setValue: linkCreateSetValue,
   } = useForm<LinkCreateFormSchema>({ resolver: linkCreateResolver });
 
   const {
@@ -104,7 +106,7 @@ const LinkCreate = () => {
     console.log(url);
     // linkCreateClearErrors("linkCreateError");
     try {
-      linkMetadata.mutate({ url });
+      linkMetadata.mutate({ url, type: "metadata" });
       // linkCreateReset();
     } catch (e) {
       linkMetadataSetError("linkMetadataError", {
@@ -113,6 +115,31 @@ const LinkCreate = () => {
       });
     }
   };
+
+  trpcBroker.update.useSubscription(
+    { type: "metadata" },
+    {
+      onStarted() {
+        console.log("Started metadata subscription");
+      },
+      onData(data) {
+        if (data.data.cause?.errno === -3008) {
+          linkCreateSetError("url", {
+            type: "custom",
+            message: "Invalid url",
+          });
+        } else {
+          linkCreateClearErrors("title");
+          linkCreateClearErrors("description");
+          linkCreateClearErrors("url");
+          linkCreateSetValue("title", data.data.title);
+          linkCreateSetValue("description", data.data.description);
+          linkCreateSetValue("url", data.data.url);
+        }
+        console.log(data);
+      },
+    },
+  );
 
   return (
     <form

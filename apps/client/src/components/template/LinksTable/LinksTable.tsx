@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo } from "react";
 import { useLinksAnalyze } from "@client/services/hooks/useLinksAnalyze";
-import { trpc } from "@client/services/trpc";
+import { trpc, trpcBroker } from "@client/services/trpc";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 
 import {
@@ -102,7 +102,7 @@ const LinksTable = () => {
     }
   }, [infiniteLinks.data?.pages]);
 
-  trpc.update.useSubscription(
+  trpcBroker.update.useSubscription(
     { type: "links" },
     {
       onStarted() {
@@ -115,8 +115,8 @@ const LinksTable = () => {
     },
   );
 
-  trpc.update.useSubscription(
-    { type: "reports" },
+  trpcBroker.update.useSubscription(
+    { type: "analyze" },
     {
       onStarted() {
         console.log("Started reports subscription");
@@ -131,7 +131,7 @@ const LinksTable = () => {
   const handleLinksAnalyze = (id: number) => {
     linkAnalyze.mutate({
       id: id,
-      type: "reports",
+      type: "analyze",
     });
   };
 
