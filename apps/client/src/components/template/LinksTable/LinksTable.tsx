@@ -11,6 +11,16 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+  TableFooter,
+} from "@client/components/ui/table";
+
 type Link = {
   id: number;
   title: string;
@@ -137,51 +147,59 @@ const LinksTable = () => {
 
   return (
     <div>
-      <table className="w-full border border-black">
-        <thead className="border-b border-gray-400">
+      <Table>
+        <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
+            <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
-                <th className="p-2" key={header.id}>
+                <TableHead className="p-2" key={header.id}>
                   {header.isPlaceholder
                     ? null
                     : flexRender(
                         header.column.columnDef.header,
                         header.getContext(),
                       )}
-                </th>
+                </TableHead>
               ))}
-            </tr>
+            </TableRow>
           ))}
-        </thead>
-        <tbody ref={parent}>
-          {table.getRowModel().rows.map((row) => (
-            <tr key={row.id} className="border-b border-gray-200">
-              {row.getVisibleCells().map((cell) => (
-                <td key={cell.id} className="text-center">
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-        <tfoot>
+        </TableHeader>
+        <TableBody ref={parent}>
+          {table.getRowModel().rows?.length ? (
+            table.getRowModel().rows.map((row) => (
+              <TableRow key={row.id} className="border-b border-gray-200">
+                {row.getVisibleCells().map((cell) => (
+                  <TableCell key={cell.id} className="text-center">
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={columns.length} className="h-24 text-center">
+                No results.
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+        <TableFooter>
           {table.getFooterGroups().map((footerGroup) => (
-            <tr key={footerGroup.id}>
+            <TableRow key={footerGroup.id}>
               {footerGroup.headers.map((header) => (
-                <th key={header.id}>
+                <TableCell key={header.id}>
                   {header.isPlaceholder
                     ? null
                     : flexRender(
                         header.column.columnDef.footer,
                         header.getContext(),
                       )}
-                </th>
+                </TableCell>
               ))}
-            </tr>
+            </TableRow>
           ))}
-        </tfoot>
-      </table>
+        </TableFooter>
+      </Table>
       {links && links?.length !== 0 && totalLinks > links?.length && (
         <button
           onClick={() => {
