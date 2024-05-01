@@ -13,7 +13,11 @@ import {
 } from 'typeorm';
 
 @Entity()
-@Tree('closure-table')
+@Tree('closure-table', {
+  closureTableName: 'collection',
+  ancestorColumnName: (column) => 'ancestor_' + column.propertyName,
+  descendantColumnName: (column) => 'descendant_' + column.propertyName,
+})
 export class Collection {
   @PrimaryGeneratedColumn()
   id: number;
@@ -38,5 +42,5 @@ export class Collection {
 
   @ManyToOne(() => User, (user) => user.collections)
   @JoinColumn({ name: 'user_id' })
-  user: Relation<User>;
+  user: Relation<Omit<User, 'password'>>;
 }

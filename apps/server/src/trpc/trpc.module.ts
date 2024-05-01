@@ -11,11 +11,12 @@ import { UsersService } from '@server/users/users.service';
 import { AuthModule } from '@server/auth/auth.module';
 import { CollectionsModule } from '@server/collections/collections.module';
 import { ConfigModule } from '@nestjs/config';
+import { Collection } from '@server/collections/collection.entity';
 
 @Module({
   imports: [
     ConfigModule,
-    TypeOrmModule.forFeature([Link, User]),
+    TypeOrmModule.forFeature([Link, User, Collection]),
     LinksModule,
     UsersModule,
     AuthModule,
