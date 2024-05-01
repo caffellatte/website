@@ -66,18 +66,6 @@ const CollectionCreate = () => {
     }
   };
 
-  trpcBroker.update.useSubscription(
-    { type: "collections" },
-    {
-      onStarted() {
-        console.log("Started collections subscription");
-      },
-      onData(data) {
-        console.log(data);
-      },
-    },
-  );
-
   return (
     <form
       className="w-full flex flex-col gap-4"

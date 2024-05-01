@@ -12,11 +12,11 @@ const variants = {
   p: "p",
   blockquote: "p",
   inlinecode: "code",
+  code: "pre",
   lead: "p",
   large: "div",
   small: "small",
   muted: "p",
-  link: "span",
 };
 
 const typographyStyleVariants = {
@@ -28,11 +28,11 @@ const typographyStyleVariants = {
   blockquote: "mt-6 border-l-2 pl-6 italic",
   inlinecode:
     "relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold",
+  code: "relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold",
   lead: "text-xl text-muted-foreground",
   large: "text-lg font-semibold",
   small: "text-sm font-medium leading-none",
   muted: "text-sm text-muted-foreground",
-  link: "font-medium text-primary underline underline-offset-4",
 };
 
 const typographyVariants = cva("text-base font-normal", {

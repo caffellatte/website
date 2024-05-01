@@ -14,6 +14,14 @@ export class CollectionsService {
     private collectionsRepository: TreeRepository<Collection>,
   ) {}
 
+  /**
+   * Redact password from User entity
+   */
+  redact(user: Omit<User, 'password'>): Omit<User, 'password'> {
+    const { id, username, links, collections } = user;
+    return { id, username, links, collections };
+  }
+
   findOne(id: number): Promise<Collection | null> {
     return this.collectionsRepository.findOneBy({ id });
   }
@@ -26,29 +34,32 @@ export class CollectionsService {
   ) {
     console.log('CollectionsService:');
     console.log(user_id, title, description, path);
-    const user = await this.usersRepository.findOneBy({ id: user_id });
+    const user = await this.usersRepository.findOne({
+      where: { id: user_id },
+      relations: ['collections'],
+    });
     if (user) {
-      const collections = await this.collectionsRepository
-        .createQueryBuilder('collection')
-        .innerJoin(
-          'collection_closure',
-          'cc',
-          'cc.id_descendant = collection.id',
-        )
-        .where('collection.user_id = :user_id', { user_id: user_id })
-        .getMany();
-      console.log('collections:');
-      console.log(collections);
-      // const rootCategories = await this.collectionsRepository.findRoots();
-      // console.log(rootCategories);
-      // return rootCategories;
-      // returns root categories without sub categories inside
-      const c1 = new Collection();
-      c1.parent = collections[0];
-      c1.title = title;
-      c1.description = description;
-      c1.user = user;
-      return await this.collectionsRepository.save(c1);
+      const newCollection = new Collection();
+      newCollection.title = title;
+      newCollection.description = description;
+      newCollection.user = this.redact(user);
+      newCollection.parent = user.collections[0];
+      return await this.collectionsRepository.save(newCollection);
+    } else {
+      throw new TRPCError({ code: 'NOT_FOUND' });
+    }
+  }
+
+  async findTrees(user_id: number) {
+    const user = await this.usersRepository.findOne({
+      where: { id: user_id },
+      relations: ['collections'],
+    });
+    if (user) {
+      const childrenTree = await this.collectionsRepository.findDescendantsTree(
+        user.collections[0],
+      );
+      return childrenTree;
     } else {
       throw new TRPCError({ code: 'NOT_FOUND' });
     }

@@ -196,49 +196,43 @@ export class TrpcRouter {
             description,
             path,
           );
-          this.ee.emit('update', { type: 'collections' });
+          // this.ee.emit('update', { type: 'collections' });
           return collection;
         } else {
           throw new TRPCError({ code: 'UNAUTHORIZED' });
         }
       }),
+    findTrees: this.protectedProcedure.input(z.object({}).nullish()).query(
+      async ({
+        // input,
+        ctx,
+      }) => {
+        if (ctx.user.sub) {
+          // const { title, description, path } = input;
+
+          const collections = await this.collections.findTrees(
+            Number(ctx.user.sub),
+            // title,
+            // description,
+            // path,
+          );
+          // this.ee.emit('update', { type: 'collections' });
+          return collections;
+        } else {
+          throw new TRPCError({ code: 'UNAUTHORIZED' });
+        }
+      },
+    ),
   });
 
   /**
    * App Router
    */
-  // TODO: ctx
   appRouter = this.trpc.router({
     auth: this.authRouter,
     hyperlinks: this.hyperlinksRouter,
     collections: this.collectionsRouter,
     users: this.usersRouter,
-    // update: this.protectedProcedure
-    //   .input(z.object({ type: z.string() }))
-    //   .subscription(({ input, ctx }) => {
-    //     return observable<{
-    //       timestamp: number;
-    //       user_id: number;
-    //       type: 'links' | 'reports';
-    //       ctx: string | JwtPayload;
-    //     }>((emit) => {
-    //       const onUpdate = ({
-    //         type,
-    //         user_id,
-    //       }: {
-    //         type: 'links' | 'reports';
-    //         user_id: number;
-    //       }) => {
-    //         if (input.type === type && Number(ctx.user.sub) === user_id) {
-    //           emit.next({ timestamp: Date.now(), type: type, ctx, user_id });
-    //         }
-    //       };
-    //       this.ee.on('update', onUpdate);
-    //       return () => {
-    //         this.ee.off('update', onUpdate);
-    //       };
-    //     });
-    //   }),
   });
 }
 
