@@ -5,6 +5,7 @@ import { User } from './user.entity';
 import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
 import { Collection } from '../collections/collection.entity';
+import { UtilsService } from '@server/utils/utils.service';
 
 interface AuthVariables {
   salt: number;
@@ -18,6 +19,7 @@ export class UsersService {
     @InjectRepository(Collection)
     private collectionsRepository: TreeRepository<Collection>,
     private configService: ConfigService<AuthVariables>,
+    private readonly utilsService: UtilsService,
   ) {}
 
   salt = this.configService.get<number>('salt', { infer: true });
@@ -39,11 +41,6 @@ export class UsersService {
   }
 
   async create(username: string, password: string): Promise<User> {
-    function redact(user: User): Omit<User, 'password'> {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { password, ...redactUser } = user;
-      return redactUser;
-    }
     const hash = await bcrypt.hash(password, this.salt);
     const user = this.usersRepository.create({
       username: username,
@@ -52,7 +49,7 @@ export class UsersService {
     await this.usersRepository.save(user);
     const collection = new Collection();
     // TODO: create utils with redact method
-    collection.user = redact(user);
+    collection.user = this.utilsService.redact(user);
     collection.title = username;
     collection.description = 'This is your root collection';
     await this.collectionsRepository.save(collection);

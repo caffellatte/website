@@ -13,6 +13,7 @@ import { TrpcModule } from '@server/trpc/trpc.module';
 import { User } from '@server/users/user.entity';
 import { Collection } from './collections/collection.entity';
 import { CollectionsModule } from './collections/collections.module';
+import { UtilsService } from './utils/utils.service';
 
 @Module({
   imports: [
@@ -51,6 +52,6 @@ import { CollectionsModule } from './collections/collections.module';
     CollectionsModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, UtilsService],
 })
 export class AppModule {}
