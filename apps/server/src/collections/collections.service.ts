@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Collection } from '@server/collections/collection.entity';
+import { Collection } from '../collections/collection.entity';
 import { Repository, TreeRepository } from 'typeorm';
-import { User } from '@server/users/user.entity';
+import { User } from '../users/user.entity';
 import { TRPCError } from '@trpc/server';
 
 @Injectable()

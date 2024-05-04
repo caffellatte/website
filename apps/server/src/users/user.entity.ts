@@ -1,4 +1,4 @@
-import { Collection } from '@server/collections/collection.entity';
+import { Collection } from '../collections/collection.entity';
 import {
   Column,
   Entity,
@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
   Relation,
 } from 'typeorm';
-import { Link } from '@server/links/link.entity';
+import { Link } from '../links/link.entity';
 
 @Entity()
 export class User {

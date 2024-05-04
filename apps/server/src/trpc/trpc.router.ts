@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { AuthService } from '@server/auth/auth.service';
-import { CollectionsService } from '@server/collections/collections.service';
-import { LinksService } from '@server/links/links.service';
-import { TrpcService } from '@server/trpc/trpc.service';
-import { UsersService } from '@server/users/users.service';
+import { AuthService } from '../auth/auth.service';
+import { CollectionsService } from '../collections/collections.service';
+import { LinksService } from '../links/links.service';
+import { TrpcService } from '../trpc/trpc.service';
+import { UsersService } from '../users/users.service';
 import { TRPCError } from '@trpc/server';
 import { EventEmitter } from 'events';
 import { z } from 'zod';

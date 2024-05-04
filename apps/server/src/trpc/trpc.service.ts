@@ -1,6 +1,6 @@
 import { initTRPC } from '@trpc/server';
 import { Injectable } from '@nestjs/common';
-import { Context } from '@server/trpc/context';
+import { Context } from '../trpc/context';
 
 @Injectable()
 export class TrpcService {

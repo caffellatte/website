@@ -1,7 +1,7 @@
 import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Link } from '@server/links/link.entity';
+import { Link } from '../links/link.entity';
 import { Job } from 'bullmq';
 import { Repository } from 'typeorm';
 import urlMetadata = require('url-metadata');
