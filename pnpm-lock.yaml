@@ -320,7 +320,7 @@ importers:
         specifier: ^4.17.17
         version: 4.17.21
       '@types/jest':
-        specifier: ^29.5.2
+        specifier: ^29.5.11
         version: 29.5.11
       '@types/jsonwebtoken':
         specifier: ^9.0.6

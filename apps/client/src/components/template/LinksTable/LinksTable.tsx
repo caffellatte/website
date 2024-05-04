@@ -1,7 +1,9 @@
+import Link from "next/link";
 import { useEffect, useState, useMemo } from "react";
 import { useLinksAnalyze } from "@client/services/hooks/useLinksAnalyze";
 import { trpc, trpcBroker } from "@client/services/trpc";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
+import { buttonVariants } from "@client/components/ui/button";
 
 import {
   ColumnDef,
@@ -21,7 +23,7 @@ import {
   TableFooter,
 } from "@client/components/ui/table";
 
-type Link = {
+type LinkType = {
   id: number;
   title: string;
   description: string;
@@ -30,9 +32,9 @@ type Link = {
 
 const LinksTable = () => {
   const [parent] = useAutoAnimate();
-  const columnHelper = createColumnHelper<Link>();
+  const columnHelper = createColumnHelper<LinkType>();
 
-  const columns: ColumnDef<Link, any>[] = [
+  const columns: ColumnDef<LinkType, any>[] = [
     columnHelper.accessor((row) => row.id, {
       id: "id",
       header: () => "ID",
@@ -54,7 +56,17 @@ const LinksTable = () => {
     columnHelper.accessor((row) => row.url, {
       id: "url",
       header: () => <span>URL</span>,
-      cell: (info) => info.renderValue(),
+      cell: (info) => {
+        return (
+          <Link
+            className={buttonVariants({ variant: "link" })}
+            target="_blank"
+            href={info.renderValue()}
+          >
+            {info.renderValue()}
+          </Link>
+        );
+      },
       footer: (info) => info.column.id,
     }),
     columnHelper.accessor((row) => row.id, {
@@ -74,7 +86,7 @@ const LinksTable = () => {
     }),
   ];
 
-  const [links, setLinks] = useState<Link[]>([]);
+  const [links, setLinks] = useState<LinkType[]>([]);
 
   const table = useReactTable({
     data: links,
@@ -169,7 +181,7 @@ const LinksTable = () => {
             table.getRowModel().rows.map((row) => (
               <TableRow key={row.id} className="border-b border-gray-200">
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id} className="text-center">
+                  <TableCell key={cell.id} className="text-left align-top">
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
