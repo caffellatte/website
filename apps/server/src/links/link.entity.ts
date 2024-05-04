@@ -6,7 +6,7 @@ import {
   JoinColumn,
   Relation,
 } from 'typeorm';
-import { User } from '@server/users/user.entity';
+import { User } from '../users/user.entity';
 
 @Entity()
 export class Link {

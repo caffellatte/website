@@ -1,4 +1,4 @@
-import { User } from '@server/users/user.entity';
+import { User } from '../users/user.entity';
 import {
   Column,
   Entity,

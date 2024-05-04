@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Link } from '@server/links/link.entity';
+import { Link } from '../links/link.entity';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
-import { User } from '@server/users/user.entity';
+import { User } from '../users/user.entity';
 import { TRPCError } from '@trpc/server';
 
 @Injectable()

@@ -3,7 +3,7 @@ import { TRPCError } from '@trpc/server';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { Logger, Injectable } from '@nestjs/common';
-import { UsersService } from '@server/users/users.service';
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class AuthService {

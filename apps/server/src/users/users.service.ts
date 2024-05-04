@@ -4,7 +4,7 @@ import { Repository, TreeRepository } from 'typeorm';
 import { User } from './user.entity';
 import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
-import { Collection } from '@server/collections/collection.entity';
+import { Collection } from '../collections/collection.entity';
 
 interface AuthVariables {
   salt: number;
