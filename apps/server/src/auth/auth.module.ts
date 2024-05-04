@@ -8,6 +8,7 @@ import { AuthService } from '../auth/auth.service';
 import { UsersModule } from '../users/users.module';
 import { UsersService } from '../users/users.service';
 import jwtConfig from '../config/jwt.config';
+import { UtilsService } from '@server/utils/utils.service';
 
 @Module({
   imports: [
@@ -16,7 +17,7 @@ import jwtConfig from '../config/jwt.config';
     UsersModule,
     TypeOrmModule.forFeature([User, Collection]),
   ],
-  providers: [AuthService, UsersService],
+  providers: [AuthService, UsersService, UtilsService],
   exports: [AuthService],
 })
 export class AuthModule {}

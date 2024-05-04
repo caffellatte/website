@@ -4,6 +4,7 @@ import { Collection } from '../collections/collection.entity';
 import { Repository, TreeRepository } from 'typeorm';
 import { User } from '../users/user.entity';
 import { TRPCError } from '@trpc/server';
+import { UtilsService } from '@server/utils/utils.service';
 
 @Injectable()
 export class CollectionsService {
@@ -12,15 +13,12 @@ export class CollectionsService {
     private usersRepository: Repository<User>,
     @InjectRepository(Collection)
     private collectionsRepository: TreeRepository<Collection>,
+    private readonly utilsService: UtilsService,
   ) {}
 
   /**
    * Redact password from User entity
    */
-  redact(user: Omit<User, 'password'>): Omit<User, 'password'> {
-    const { id, username, links, collections } = user;
-    return { id, username, links, collections };
-  }
 
   findOne(id: number): Promise<Collection | null> {
     return this.collectionsRepository.findOneBy({ id });
@@ -42,7 +40,7 @@ export class CollectionsService {
       const newCollection = new Collection();
       newCollection.title = title;
       newCollection.description = description;
-      newCollection.user = this.redact(user);
+      newCollection.user = this.utilsService.redact(user);
       newCollection.parent = user.collections[0];
       return await this.collectionsRepository.save(newCollection);
     } else {

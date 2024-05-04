@@ -12,6 +12,7 @@ import { AuthModule } from '../auth/auth.module';
 import { CollectionsModule } from '../collections/collections.module';
 import { ConfigModule } from '@nestjs/config';
 import { Collection } from '../collections/collection.entity';
+import { UtilsService } from '@server/utils/utils.service';
 
 @Module({
   imports: [
@@ -23,6 +24,12 @@ import { Collection } from '../collections/collection.entity';
     CollectionsModule,
   ],
   controllers: [],
-  providers: [TrpcRouter, TrpcService, LinksService, UsersService],
+  providers: [
+    TrpcRouter,
+    TrpcService,
+    LinksService,
+    UsersService,
+    UtilsService,
+  ],
 })
 export class TrpcModule {}
