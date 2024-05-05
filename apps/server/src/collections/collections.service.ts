@@ -4,7 +4,7 @@ import { Collection } from '../collections/collection.entity';
 import { Repository, TreeRepository } from 'typeorm';
 import { User } from '../users/user.entity';
 import { TRPCError } from '@trpc/server';
-import { UtilsService } from '@server/utils/utils.service';
+import { UtilsService } from '../utils/utils.service';
 
 @Injectable()
 export class CollectionsService {

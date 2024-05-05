@@ -5,7 +5,7 @@ import { User } from './user.entity';
 import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
 import { Collection } from '../collections/collection.entity';
-import { UtilsService } from '@server/utils/utils.service';
+import { UtilsService } from '../utils/utils.service';
 
 interface AuthVariables {
   salt: number;
